@@ -1,4 +1,4 @@
-package fr.benjaminbrehier._6quiprend;
+package fr.benjaminbrehier._6quiprend.Model;
 
 public class Card {
     private int number;

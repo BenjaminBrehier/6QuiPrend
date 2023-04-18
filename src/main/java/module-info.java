@@ -8,4 +8,6 @@ module fr.benjaminbrehier._6quiprend {
 
     opens fr.benjaminbrehier._6quiprend to javafx.fxml;
     exports fr.benjaminbrehier._6quiprend;
+    exports fr.benjaminbrehier._6quiprend.Model;
+    opens fr.benjaminbrehier._6quiprend.Model to javafx.fxml;
 }

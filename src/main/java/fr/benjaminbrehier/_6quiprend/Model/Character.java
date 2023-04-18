@@ -1,4 +1,6 @@
-package fr.benjaminbrehier._6quiprend;
+package fr.benjaminbrehier._6quiprend.Model;
+import fr.benjaminbrehier._6quiprend.Model.Card;
+
 import java.util.ArrayList;
 
 public abstract class Character{
