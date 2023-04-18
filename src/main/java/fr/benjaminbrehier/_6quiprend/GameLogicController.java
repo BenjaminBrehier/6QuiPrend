@@ -3,7 +3,7 @@ package fr.benjaminbrehier._6quiprend;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class GameLogicController {
     @FXML
     private Label welcomeText;
 

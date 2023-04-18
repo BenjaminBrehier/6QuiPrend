@@ -80,7 +80,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>fr.benjaminbrehier._6quiprend/fr.benjaminbrehier._6quiprend.HelloApplication
+                            <mainClass>fr.benjaminbrehier._6quiprend/fr.benjaminbrehier._6quiprend.GameLogic
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
