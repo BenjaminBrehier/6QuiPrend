@@ -7,9 +7,9 @@ public abstract class Character{
     private ArrayList<Card> hand;
     private ArrayList<Card> points;
 
-    public Character (ArrayList<Card> hand, ArrayList<Card> points){
+    public Character (ArrayList<Card> hand){
         this.hand = hand;
-        this.points = points;
+        this.points = new ArrayList<Card>();
     }
 
 
