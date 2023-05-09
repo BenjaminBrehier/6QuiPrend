@@ -3,6 +3,7 @@ package fr.benjaminbrehier._6quiprend;
 import fr.benjaminbrehier._6quiprend.Model.Card;
 import fr.benjaminbrehier._6quiprend.Model.IA;
 import fr.benjaminbrehier._6quiprend.Model.Player;
+import fr.benjaminbrehier._6quiprend.Model.Character;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
+import java.util.List;
 
 import static java.lang.Math.floor;
 
@@ -85,9 +86,17 @@ public class GameLogic extends Application {
 
     private void setup() {
         // Méthode générique pour randomiser une liste en Java à l'aide du mélange Fisher-Yates
+
+        ArrayList<Card> pioche = new ArrayList();
+        ArrayList<ArrayList> lignes = new ArrayList<>();
         int NbJoueurs = 2;
         Player joueur = new Player(null,null);
         IA bot = new IA(null, null);
+
+        List<Character> players = new ArrayList<>();
+        players.add(joueur);
+        players.add(bot);
+
         int i;
         System.out.println(pioche.size());
         for (i = 1; i<=104; i++){
@@ -123,6 +132,12 @@ public class GameLogic extends Application {
         ArrayList<Card> ligne4 = new ArrayList();
         ligne4.add(pioche.get(0));
         pioche.remove(0);
+
+        lignes.add(ligne1);
+        lignes.add(ligne2);
+        lignes.add(ligne3);
+        lignes.add(ligne4);
+
         ArrayList<Card> playerHand = new ArrayList();
         ArrayList<Card> botHand = new ArrayList();
         for (i = 0; i<10; i++){
@@ -130,17 +145,24 @@ public class GameLogic extends Application {
             pioche.remove(0);
             botHand.add(pioche.get(0));
             pioche.remove(0);
-
         }
-        joueur.setHand(playerHand);
-        bot.setHand(botHand);
-        for (Card card : pioche) {
-            System.out.println(card);
-        }
-    }
 
-    private void startGame() {
-        
+        for (Character character : players){
+            joueur.setHand(playerHand);
+            bot.setHand(botHand);
+        }
+
+        for (i=0; i < playerHand.size(); i++){
+            System.out.println("Liste des cartes du joueur : ");
+            System.out.println("Nombre :" + playerHand.get(i).getNumber() + " | " + "Tête :" + playerHand.get(i).getBullHead() + "\n");
+        }
+
+        for (i=0; i < botHand.size(); i++){
+            System.out.println("Liste des cartes de l'IA : ");
+            System.out.println("Nombre :" + playerHand.get(i).getNumber() + " | " + "Tête :" + playerHand.get(i).getBullHead() + "\n");
+        }
+
+
     }
 
     public static void main(String[] args) {
