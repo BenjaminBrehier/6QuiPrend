@@ -6,11 +6,16 @@ import fr.benjaminbrehier._6quiprend.Model.Player;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -22,59 +27,89 @@ import java.util.Random;
 import static java.lang.Math.floor;
 
 public class GameLogic extends Application {
+    ArrayList<Card> pioche = new ArrayList();
 
-    @FXML
-    private ImageView logo;
 
-    @FXML
-    private Label nbJoueurLbl;
-
-    @FXML
-    private Slider sliderNbJoueur;
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(GameLogic.class.getResource("HomePage.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1440, 855);
+        HBox hbox = new HBox();
+        VBox vbox = new VBox();
+
+        ImageView logo = new ImageView(new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/logo.jpeg").toURI().toString()));
+        logo.setFitWidth(250);
+        logo.setFitHeight(250);
+
+        vbox.getChildren().add(logo);
+
+        Label nbJoueurLbl = new Label("Combien de joueurs? : 6");
+        vbox.getChildren().add(nbJoueurLbl);
+
+        Slider sliderNbJoueur = new Slider(2, 10, 6);
+        sliderNbJoueur.setShowTickLabels(true);
+        sliderNbJoueur.setShowTickMarks(true);
+        sliderNbJoueur.setMajorTickUnit(1);
+        sliderNbJoueur.setBlockIncrement(1);
+        sliderNbJoueur.setSnapToTicks(true);
+        sliderNbJoueur.setMinorTickCount(0);
+        sliderNbJoueur.setPrefWidth(300);
+        vbox.getChildren().add(sliderNbJoueur);
+
+
+        Button btn = new Button("Jouer");
+        btn.setOnAction(actionEvent -> {
+            setup();
+        });
+        vbox.getChildren().add(btn);
+
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(0, 0, 50, 0));
+        vbox.setSpacing(40);
+
+        hbox.getChildren().add(vbox);
+
+        hbox.setAlignment(Pos.CENTER);
+        hbox.setPadding(new Insets(0, 0, 50, 0));
+
+        Scene scene = new Scene(hbox, 1440, 855);
+
         stage.setTitle("6QuiPrend !");
         stage.setScene(scene);
         stage.show();
-
-        Image image = new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/logo.jpeg").toURI().toString());
-        logo = (ImageView) scene.lookup("#logo");
-        logo.setImage(image);
-
-        nbJoueurLbl = (Label) scene.lookup("#nbJoueurLbl");
-
-        sliderNbJoueur = (Slider) scene.lookup("#slider");
 
         sliderNbJoueur.valueProperty().addListener((observable, oldValue, newValue) -> {
             nbJoueurLbl.setText("Combien de joueurs ? : " + newValue.intValue()); // Met à jour le label avec la nouvelle valeur du slider
         });
         nbJoueurLbl.setText("Combien de joueurs ? : 6");
+
+    }
+
+    private void setup() {
         // Méthode générique pour randomiser une liste en Java à l'aide du mélange Fisher-Yates
-        ArrayList<Card> pioche = new ArrayList();
         int NbJoueurs = 2;
         Player joueur = new Player(null,null);
         IA bot = new IA(null, null);
         int i;
         System.out.println(pioche.size());
         for (i = 1; i<=104; i++){
-            double d = i / 10;
-            double c = i/5;
-            double o = i/11;
-
-            if (i == 55) {
-                pioche.add( new Card(i,7));
-            }else if (o == floor(o)) {
-               pioche.add( new Card(i,5));
-            }else if (d == floor(d)) {
-                pioche.add( new Card(i,3));
-            }else if (c == floor(c)) {
-                pioche.add( new Card(i,2));
-            }else{
-                pioche.add( new Card(i,1));
+            if (i%11 == 0){
+                if (i == 55) {
+                    pioche.add(new Card(i, 7));
+                }
+                else{
+                    pioche.add(new Card(i, 5));
+                }
             }
-        }System.out.println(pioche.size());
+            else if (i%10 == 0){
+                pioche.add(new Card(i, 3));
+            }
+            else if (i%5 == 0){
+                pioche.add(new Card(i, 2));
+            }
+            else{
+                pioche.add(new Card(i, 1));
+            }
+        }
+        System.out.println(pioche.size());
         Collections.shuffle(pioche);
         ArrayList<Card> ligne1 = new ArrayList();
         ligne1.add(pioche.get(0));
@@ -99,7 +134,13 @@ public class GameLogic extends Application {
         }
         joueur.setHand(playerHand);
         bot.setHand(botHand);
+        for (Card card : pioche) {
+            System.out.println(card);
+        }
+    }
 
+    private void startGame() {
+        
     }
 
     public static void main(String[] args) {
