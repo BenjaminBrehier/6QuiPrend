@@ -1,5 +1,6 @@
 package fr.benjaminbrehier._6quiprend;
 
+import fr.benjaminbrehier._6quiprend.Model.Board;
 import fr.benjaminbrehier._6quiprend.Model.Card;
 import fr.benjaminbrehier._6quiprend.Model.IA;
 import fr.benjaminbrehier._6quiprend.Model.Player;
@@ -23,13 +24,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class GameLogic extends Application {
-    ArrayList<Card> pioche = new ArrayList<>();
-    ArrayList<ArrayList<Card>> lignes = new ArrayList<>();
-    ArrayList<Character> players = new ArrayList<>();
+    public static ArrayList<Card> pioche = new ArrayList<>();
+    public static ArrayList<Character> players = new ArrayList<>();
+    Board board = new Board(new ArrayList<ArrayList<Card>>());
+    public static Stage stage;
 
 
     @Override
     public void start(Stage stage) throws IOException {
+        this.stage = stage;
         HBox hbox = new HBox();
         VBox vbox = new VBox();
 
@@ -56,6 +59,7 @@ public class GameLogic extends Application {
         Button btn = new Button("Jouer");
         btn.setOnAction(actionEvent -> {
             setup(sliderNbJoueur.getValue());
+            board.reloadBoard();
         });
         vbox.getChildren().add(btn);
 
@@ -118,10 +122,10 @@ public class GameLogic extends Application {
         ligne4.add(pioche.get(0));
         pioche.remove(0);
 
-        lignes.add(ligne1);
-        lignes.add(ligne2);
-        lignes.add(ligne3);
-        lignes.add(ligne4);
+        board.getLignes().add(ligne1);
+        board.getLignes().add(ligne2);
+        board.getLignes().add(ligne3);
+        board.getLignes().add(ligne4);
 
         for (int i = 0; i < nbJoueur; i++) {
             ArrayList<Card> characterHand = new ArrayList<>();
@@ -140,12 +144,12 @@ public class GameLogic extends Application {
         }
 
         
-        for (Character character : players) {
-            System.out.println("Liste des cartes du joueur : ");
-            for (int i = 0; i < character.getHand().size(); i++) {
-                System.out.println("Nombre :" + character.getHand().get(i).getNumber() + " | " + "Tête :" + character.getHand().get(i).getBullHead() + "\n");
-            }
-        }
+        // for (Character character : players) {
+        //     System.out.println("Liste des cartes du joueur : ");
+        //     for (int i = 0; i < character.getHand().size(); i++) {
+        //         System.out.println("Nombre :" + character.getHand().get(i).getNumber() + " | " + "Tête :" + character.getHand().get(i).getBullHead());
+        //     }
+        // }
     }
 
     public static void main(String[] args) {
