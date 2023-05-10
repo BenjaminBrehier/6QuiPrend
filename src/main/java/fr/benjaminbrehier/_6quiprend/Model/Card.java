@@ -65,6 +65,8 @@ public class Card {
         this.rectangle.getChildren().add(rectangle);
         this.rectangle.getChildren().add(imageView);
         this.rectangle.getChildren().add(label);
+        this.rectangle.setPrefWidth(100);
+        this.rectangle.setPrefHeight(150);
     }
 
     public int getNumber(){

@@ -86,8 +86,6 @@ public class GameLogic extends Application {
     }
 
     private void setup(double nbJoueur) {
-        System.out.println(nbJoueur);
-        System.out.println(pioche.size());
         for (int i = 1; i<=104; i++){
             if (i%11 == 0){
                 if (i == 55) {
@@ -107,7 +105,7 @@ public class GameLogic extends Application {
                 pioche.add(new Card(i, 1));
             }
         }
-        System.out.println(pioche.size());
+        
         Collections.shuffle(pioche);
         ArrayList<Card> ligne1 = new ArrayList<>();
         ligne1.add(pioche.get(0));

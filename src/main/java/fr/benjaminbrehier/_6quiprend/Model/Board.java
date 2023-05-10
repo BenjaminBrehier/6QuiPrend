@@ -3,10 +3,13 @@ package fr.benjaminbrehier._6quiprend.Model;
 import java.util.ArrayList;
 
 import fr.benjaminbrehier._6quiprend.GameLogic;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class Board {
     private ArrayList<ArrayList<Card>> lignes;
@@ -44,9 +47,29 @@ public class Board {
             }
             vBox.getChildren().add(vBox2);
         }
-        // Couleur de fond en blanc
+        
+        
+        HBox playerHand = new HBox();
+        playerHand.setTranslateY(playerHand.getTranslateY()+20);
+        playerHand.setAlignment(Pos.CENTER);
+        playerHand.setSpacing(10);
+        playerHand.setStyle("-fx-background-color: white;");
+    
+        for (Card card : GameLogic.players.get(0).getHand()) {
+            playerHand.getChildren().add(card.getRectangle());
+            card.getRectangle().setOnMouseEntered(mouseEvent -> {
+                card.getRectangle().setTranslateY(card.getRectangle().getTranslateY() - 10);
+                ((Rectangle) card.getRectangle().getChildren().get(0)).setStroke(Color.ORANGE);
+            });
+
+            card.getRectangle().setOnMouseExited(mouseEvent -> {
+                card.getRectangle().setTranslateY(card.getRectangle().getTranslateY() + 10);
+                ((Rectangle) card.getRectangle().getChildren().get(0)).setStroke(Color.BLACK);
+            });
+        }
+        
+        vBox.getChildren().add(playerHand);
         vBox.setStyle("-fx-background-color: white;");
-        // Ajout de la VBox à la scène
         Scene scene = new Scene(vBox, 1440, 855);
         GameLogic.stage.setScene(scene);
     }
