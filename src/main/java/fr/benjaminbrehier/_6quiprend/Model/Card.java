@@ -2,33 +2,36 @@ package fr.benjaminbrehier._6quiprend.Model;
 
 import java.io.File;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
+import javafx.scene.text.Font;
 
 public class Card {
     private int number;
     private int bullHead;
-    private Pane rectangle;
+    private Pane graphicCard;
 
     public Card(int number, int bullHead){
         this.number = number;
         this.bullHead = bullHead;
-        this.rectangle = new Pane();
-        // Ajouter dans ce Pane, un rectangle symbolisant la carte et dans son centre un label indiquant le number de la carte
+        this.graphicCard = new Pane();
+
         Rectangle rectangle = new Rectangle();
-        // mettre rectanvle en rouge
         rectangle.setFill(Color.WHITE);
-        // mettre rectangle en 100x100
         rectangle.setWidth(100);
         rectangle.setHeight(150);
         rectangle.setStroke(Color.BLACK);
-        rectangle.setStrokeWidth(5);
+        rectangle.setStrokeWidth(4);
         rectangle.setStrokeLineCap(StrokeLineCap.ROUND);
         rectangle.setStrokeLineJoin(StrokeLineJoin.ROUND);
         rectangle.setStrokeDashOffset(0);
@@ -37,36 +40,177 @@ public class Card {
         rectangle.setRotate(0);
         rectangle.setVisible(true);
         rectangle.toFront();
+
         // Afficher au centre du rectangle le number
-        Label label = new Label(String.valueOf(number));
-        label.setStyle("-fx-font-size: 50px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: grey; -fx-font-weight: bold;");
-        // Centrer le label
-        label.setPrefWidth(100);
-        label.setPrefHeight(150);
+        Label mainLabel = new Label(String.valueOf(number));
+        // Centrer le mainLabel
+        mainLabel.setPrefWidth(100);
+        mainLabel.setPrefHeight(150);
         if (number < 10) {
-            label.setLayoutX(35);
+            mainLabel.setLayoutX(35);
         } else if (number > 99) {
-            label.setLayoutX(7);
+            mainLabel.setLayoutX(7);
         } else {
-            label.setLayoutX(20);
+            mainLabel.setLayoutX(20);
         }
-        label.setVisible(true);
-        label.toFront();
-        // Ajouter une ImageView au centre du rectangle
-        ImageView imageView = new ImageView(new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/tauraux.png").toURI().toString()));
-        imageView.setFitWidth(80);
+        mainLabel.setVisible(true);
+        mainLabel.toFront();
+
+        Rectangle rectCouleur = new Rectangle();
+        rectCouleur.setWidth(80);
+        rectCouleur.setHeight(90);
+        rectCouleur.setVisible(true);
+        rectCouleur.setLayoutX(10);
+        rectCouleur.setLayoutY(30);
+        rectCouleur.toFront();
+        
+        Image image = new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/taurauxViolet.png").toURI().toString());
+        rectCouleur.setFill(Color.WHITE);
+
+        Label cornerLeftHaut = new Label(String.valueOf(number));
+        cornerLeftHaut.setLayoutX(5);
+        cornerLeftHaut.setLayoutY(5);
+        cornerLeftHaut.setVisible(true);
+        cornerLeftHaut.toFront();
+
+        Label cornerLeftBas = new Label(String.valueOf(number));
+        cornerLeftBas.setLayoutX(5);
+        cornerLeftBas.setLayoutY(130);
+        cornerLeftBas.setVisible(true);
+        cornerLeftBas.setRotate(180);      //! A garder ?
+        cornerLeftBas.toFront();
+
+        Label cornerRightHaut = new Label(String.valueOf(number));
+        cornerRightHaut.setLayoutX(70);
+        cornerRightHaut.setLayoutY(5);
+        cornerRightHaut.setVisible(true);
+        cornerRightHaut.toFront();
+
+        Label cornerRightBas = new Label(String.valueOf(number));
+        cornerRightBas.setLayoutX(70);
+        cornerRightBas.setLayoutY(130);
+        cornerRightBas.setVisible(true);
+        cornerRightBas.setRotate(180);      //! A garder ?
+        cornerRightBas.toFront();
+        
+        ImageView miniTetes = new ImageView();
+        miniTetes.setImage(new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/miniTaurauxViolet.png").toURI().toString()));
+        ImageView miniTetesBas = new ImageView();
+
+
+        String colorMain = "#b69abd";
+        String colorCorner = "#b69abd";
+        miniTetes.setFitWidth(15);
+        miniTetes.setFitHeight(15);
+        miniTetes.setLayoutX(40);
+        miniTetes.setLayoutY(5);
+        miniTetesBas.setLayoutY(miniTetes.getLayoutY()+128);
+        if (bullHead == 2) {
+            rectCouleur.setFill(Color.BLUE);
+            image = new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/taurauxBleu.png").toURI().toString());
+            colorMain = "#269d99";
+            colorCorner = "#269d99";
+            miniTetes.setImage(new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/miniTaurauxBleu.png").toURI().toString()));
+            miniTetes.setFitWidth(23);
+            miniTetes.setFitHeight(12);
+            miniTetes.setLayoutX(37);
+            miniTetes.setLayoutY(8);
+        } else if (bullHead == 3) {
+            rectCouleur.setFill(Color.GREEN);
+            image = new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/taurauxVert.png").toURI().toString());
+            colorMain = "#f1cb39";
+            colorCorner = "#96c354";
+            miniTetes.setImage(new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/miniTaurauxJaune.png").toURI().toString()));
+            miniTetes.setFitWidth(30);
+            miniTetes.setFitHeight(13);
+            miniTetes.setLayoutX(34);
+            miniTetes.setLayoutY(8);
+
+            miniTetesBas.setLayoutY(miniTetes.getLayoutY()+126);
+
+        } else if (bullHead == 5) {
+            rectCouleur.setFill(Color.RED);
+            image = new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/taurauxBleu.png").toURI().toString());
+            colorMain = "#96c354";
+            colorCorner = "#FF0F00";
+            miniTetes.setImage(new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/miniTaurauxVerts.png").toURI().toString()));
+            miniTetes.setFitWidth(33);
+            miniTetes.setFitHeight(21);
+            miniTetes.setLayoutX(32);
+            miniTetes.setLayoutY(5);
+            miniTetesBas.setLayoutY(miniTetes.getLayoutY()+120);
+        } else if (bullHead == 7) {
+            rectCouleur.setFill(Color.YELLOW);
+            rectCouleur.setWidth(80);
+            rectCouleur.setHeight(125);
+            rectCouleur.setLayoutX(10);
+            rectCouleur.setLayoutY(13);
+
+
+
+            image = new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/taurauxBleu.png").toURI().toString());
+            colorMain = "#ff2857";
+            colorCorner = "#2540c1";
+            miniTetes.setImage(new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/miniTaurauxRouge.png").toURI().toString()));
+            miniTetes.setFitWidth(33);
+            miniTetes.setFitHeight(21);
+            miniTetes.setLayoutX(32);
+            miniTetes.setLayoutY(5);
+            miniTetesBas.setLayoutY(miniTetes.getLayoutY()+120);
+        }
+        mainLabel.setStyle("-fx-font-size: 50px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: "+colorMain+"; -fx-font-weight: bold;");
+        cornerRightHaut.setStyle("-fx-font-size: 15px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: "+colorCorner+"; -fx-font-weight: bold;");
+        cornerLeftBas.setStyle("-fx-font-size: 15px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: "+colorCorner+"; -fx-font-weight: bold;");
+        cornerLeftHaut.setStyle("-fx-font-size: 15px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: "+colorCorner+"; -fx-font-weight: bold;");
+        cornerRightBas.setStyle("-fx-font-size: 15px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: "+colorCorner+"; -fx-font-weight: bold;");
+
+        
+        // Ajouter le logo au centre du rectangle
+        ImageView imageView = new ImageView();
+        imageView.setImage(image);
+        imageView.setFitWidth(90);
         imageView.setFitHeight(80);
-        imageView.setLayoutX(10);
+        imageView.setLayoutX(5);
         imageView.setLayoutY(35);
         imageView.setVisible(true);
         imageView.toFront();
         
-        // Ajouter le rectangle et le label au Pane
-        this.rectangle.getChildren().add(rectangle);
-        this.rectangle.getChildren().add(imageView);
-        this.rectangle.getChildren().add(label);
-        this.rectangle.setPrefWidth(100);
-        this.rectangle.setPrefHeight(150);
+
+        miniTetes.setVisible(true);
+        miniTetes.toFront();
+
+        miniTetesBas.setImage(miniTetes.getImage());
+        miniTetesBas.setFitWidth(miniTetes.getFitWidth());
+        miniTetesBas.setFitHeight(miniTetes.getFitHeight());
+        miniTetesBas.setLayoutX(miniTetes.getLayoutX());
+        miniTetesBas.setVisible(true);
+        miniTetesBas.toFront();
+        miniTetesBas.setRotate(180);      //! A garder?
+
+
+
+        // HBox hbox = new HBox(10); // 10 est l'espacement entre les éléments
+        // hbox.setAlignment(Pos.CENTER); // centre les éléments horizontalement
+        // hbox.setPadding(new Insets(10)); // 10 est la marge autour de la HBox
+        // hbox.getChildren().addAll(cornerLeftHaut, miniTetes, cornerRightHaut);
+
+        // // configure la mise en page pour la HBox
+        // hbox.setHgrow(cornerLeftHaut, Priority.ALWAYS);
+        // hbox.setFillHeight(true);
+        
+        this.graphicCard.getChildren().add(rectangle);
+        this.graphicCard.getChildren().add(rectCouleur);
+        // this.graphicCard.getChildren().add(hbox);
+        this.graphicCard.getChildren().add(miniTetes);
+        this.graphicCard.getChildren().add(miniTetesBas);
+        this.graphicCard.getChildren().add(cornerLeftHaut);
+        this.graphicCard.getChildren().add(cornerLeftBas);
+        this.graphicCard.getChildren().add(cornerRightHaut);
+        this.graphicCard.getChildren().add(cornerRightBas);
+        this.graphicCard.getChildren().add(imageView);
+        this.graphicCard.getChildren().add(mainLabel);
+        this.graphicCard.setPrefWidth(100);
+        this.graphicCard.setPrefHeight(150);
     }
 
     public int getNumber(){
@@ -85,8 +229,8 @@ public class Card {
         this.bullHead = bullHead;
     }
 
-    public Pane getRectangle(){
-        return rectangle;
+    public Pane getGraphicCard(){
+        return graphicCard;
     }
 
     @Override

@@ -43,7 +43,7 @@ public class Board {
             HBox vBox2 = new HBox();
             vBox2.setSpacing(10);
             for (int j = 0; j < lignes.get(i).size(); j++) {
-                vBox2.getChildren().add(lignes.get(i).get(j).getRectangle());
+                vBox2.getChildren().add(lignes.get(i).get(j).getGraphicCard());
             }
             vBox.getChildren().add(vBox2);
         }
@@ -56,16 +56,23 @@ public class Board {
         playerHand.setStyle("-fx-background-color: white;");
     
         for (Card card : GameLogic.players.get(0).getHand()) {
-            playerHand.getChildren().add(card.getRectangle());
-            card.getRectangle().setOnMouseEntered(mouseEvent -> {
-                card.getRectangle().setTranslateY(card.getRectangle().getTranslateY() - 10);
-                ((Rectangle) card.getRectangle().getChildren().get(0)).setStroke(Color.ORANGE);
+            playerHand.getChildren().add(card.getGraphicCard());
+            card.getGraphicCard().setOnMouseEntered(mouseEvent -> {
+                card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY() - 10);
+                ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.ORANGE);
             });
 
-            card.getRectangle().setOnMouseExited(mouseEvent -> {
-                card.getRectangle().setTranslateY(card.getRectangle().getTranslateY() + 10);
-                ((Rectangle) card.getRectangle().getChildren().get(0)).setStroke(Color.BLACK);
+            card.getGraphicCard().setOnMouseExited(mouseEvent -> {
+                card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY() + 10);
+                ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
             });
+
+            // // Remove events on click
+            // card.getGraphicCard().setOnMouseClicked(mouseEvent -> {
+            //     card.getGraphicCard().setOnMouseEntered(null);
+            //     card.getGraphicCard().setOnMouseExited(null);
+            //     card.getGraphicCard().setOnMouseClicked(null);
+            // });
         }
         
         vBox.getChildren().add(playerHand);
