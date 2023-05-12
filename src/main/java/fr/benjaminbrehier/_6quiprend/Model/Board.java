@@ -36,8 +36,8 @@ public class Board {
 
     public void reloadBoard(){
         VBox vBox = new VBox();
-        vBox.setLayoutX(10);
-        vBox.setLayoutY(10);
+        vBox.setLayoutX(0);
+        vBox.setLayoutY(0);
         vBox.setSpacing(10);
         for (int i = 0; i < lignes.size(); i++) {
             HBox vBox2 = new HBox();
@@ -59,7 +59,7 @@ public class Board {
             playerHand.getChildren().add(card.getGraphicCard());
             card.getGraphicCard().setOnMouseEntered(mouseEvent -> {
                 card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY() - 10);
-                ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.ORANGE);
+                ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.RED);
             });
 
             card.getGraphicCard().setOnMouseExited(mouseEvent -> {
@@ -76,7 +76,8 @@ public class Board {
         }
         
         vBox.getChildren().add(playerHand);
-        vBox.setStyle("-fx-background-image: url('https://img.freepik.com/vecteurs-libre/table-manger-bois-vue-dessus-vecteur-realiste_107791-13011.jpg?w=1380&t=st=1683874217~exp=1683874817~hmac=4a55c4c2786ec3d84229b244ac8af4ad194f73d72b5687727a81fb6b482a77e5')");
+        vBox.setStyle("-fx-background-size: 1440 855; -fx-background-image: url('https://img.freepik.com/vecteurs-libre/table-manger-bois-vue-dessus-vecteur-realiste_107791-13011.jpg?w=1380&t=st=1683874217~exp=1683874817~hmac=4a55c4c2786ec3d84229b244ac8af4ad194f73d72b5687727a81fb6b482a77e5')");
+        vBox.setPadding(new Insets(10, 0, 0, 10));
         Scene scene = new Scene(vBox, 1440, 855);
         GameLogic.stage.setScene(scene);
     }
