@@ -83,7 +83,7 @@ public class GameLogic extends Application {
         });
         nbJoueurLbl.setText("Combien de joueurs ? : 6");
 
-    }
+        }
 
     private void setup(double nbJoueur) {
         for (int i = 1; i<=104; i++){

@@ -53,7 +53,7 @@ public class Board {
         playerHand.setTranslateY(playerHand.getTranslateY()+20);
         playerHand.setAlignment(Pos.CENTER);
         playerHand.setSpacing(10);
-        playerHand.setStyle("-fx-background-color: white;");
+
     
         for (Card card : GameLogic.players.get(0).getHand()) {
             playerHand.getChildren().add(card.getGraphicCard());
@@ -76,7 +76,7 @@ public class Board {
         }
         
         vBox.getChildren().add(playerHand);
-        vBox.setStyle("-fx-background-color: white;");
+        vBox.setStyle("-fx-background-image: url('https://img.freepik.com/vecteurs-libre/table-manger-bois-vue-dessus-vecteur-realiste_107791-13011.jpg?w=1380&t=st=1683874217~exp=1683874817~hmac=4a55c4c2786ec3d84229b244ac8af4ad194f73d72b5687727a81fb6b482a77e5')");
         Scene scene = new Scene(vBox, 1440, 855);
         GameLogic.stage.setScene(scene);
     }
