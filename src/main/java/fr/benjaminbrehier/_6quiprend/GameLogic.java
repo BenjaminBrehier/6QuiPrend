@@ -20,8 +20,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 public class GameLogic extends Application {
     public static ArrayList<Card> pioche = new ArrayList<>();
@@ -141,13 +140,69 @@ public class GameLogic extends Application {
             players.add(character);
         }
 
-        
+        jouer();
         // for (Character character : players) {
         //     System.out.println("Liste des cartes du joueur : ");
         //     for (int i = 0; i < character.getHand().size(); i++) {
         //         System.out.println("Nombre :" + character.getHand().get(i).getNumber() + " | " + "Tête :" + character.getHand().get(i).getBullHead());
         //     }
         // }
+    }
+
+
+    private void jouer(){
+
+        for (int i=0; i < 1; i++){
+            System.out.println("État des 4 lignes :");
+            System.out.println(board.getLignes().get(0).toString());
+            System.out.println(board.getLignes().get(1).toString());
+            System.out.println(board.getLignes().get(2).toString());
+            System.out.println(board.getLignes().get(3).toString());
+
+            for (Character player :players){
+                System.out.println("Joueur : " + player + " || Cartes :");
+                System.out.println(player.getHand().toString());
+            }
+
+            HashMap<String, Card> cartesJouees = new HashMap<>();
+            cartesJouees.put("jf", players.get(1).getHand().get(1));
+            cartesJouees.put("ezqt", players.get(2).getHand().get(1));
+            cartesJouees.put("eqsrgdhf", players.get(3).getHand().get(1));
+            cartesJouees.put("fsrgdhf", players.get(4).getHand().get(1));
+
+
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Quelle carte voulez vous jouer ? (mettez la position de la carte dans votre main, sachant que la première carte est en position 0 :");
+            int carteJouée = scanner.nextInt();
+
+            if (carteJouée < players.get(0).getHand().size()){
+                System.out.println("Vous jouez la carte " + players.get(0).getHand().get(carteJouée).toString());
+                cartesJouees.put(players.get(0).toString(), players.get(0).getHand().get(carteJouée));
+            }
+
+            //Trie des cartes dans la HashMap
+            cartesJouees.forEach((k,v)->System.out.println(k+"="+v));
+            System.out.println("After sorting by value");
+            List<Map.Entry<String, Card>> list = new ArrayList<>(cartesJouees.entrySet());
+            list.sort(Comparator.comparingInt(e -> e.getValue().getNumber()));
+            HashMap<String, Card> cartesJoueesTriees = new HashMap<>();
+            for (Map.Entry<String, Card> entry : list) {
+                cartesJoueesTriees.put(entry.getKey(), entry.getValue());
+            }
+            System.out.println("Sorted Map:");
+            cartesJoueesTriees.forEach((k,v)->System.out.println(k+"="+v));
+
+            if(cartesJoueesTriees.size() == 0){
+                for (int i=0; i<cartesJoueesTriees.size(); i++){
+                    //cartesJoueesTriees.get
+
+                }
+            }
+            else{
+                break;
+            }
+        }
+
     }
 
     public static void main(String[] args) {
