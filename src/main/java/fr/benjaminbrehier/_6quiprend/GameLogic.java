@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -45,6 +46,17 @@ public class GameLogic extends Application {
         Label nbJoueurLbl = new Label("Combien de joueurs? : 6");
         vbox.getChildren().add(nbJoueurLbl);
 
+        HBox nameBox = new HBox();
+        nameBox.setSpacing(10);
+        nameBox.setAlignment(Pos.CENTER);
+        nameBox.setPadding(new Insets(10));
+        Label nameLbl = new Label("Nom du joueur : ");
+        nameBox.getChildren().add(nameLbl);
+        TextField nameJoueur = new TextField();
+        nameJoueur.setPromptText("Nom du joueur");
+        nameBox.getChildren().add(nameJoueur);
+        vbox.getChildren().add(nameBox);
+
         Slider sliderNbJoueur = new Slider(2, 10, 6);
         sliderNbJoueur.setShowTickLabels(true);
         sliderNbJoueur.setShowTickMarks(true);
@@ -58,7 +70,7 @@ public class GameLogic extends Application {
 
         Button btn = new Button("Jouer");
         btn.setOnAction(actionEvent -> {
-            setup(sliderNbJoueur.getValue());
+            setup(sliderNbJoueur.getValue(), nameJoueur.getText());
             board.reloadBoard();
         });
         vbox.getChildren().add(btn);
@@ -85,7 +97,7 @@ public class GameLogic extends Application {
 
         }
 
-    private void setup(double nbJoueur) {
+    private void setup(double nbJoueur, String name) {
         for (int i = 1; i<=104; i++){
             if (i%11 == 0){
                 if (i == 55) {
@@ -105,7 +117,7 @@ public class GameLogic extends Application {
                 pioche.add(new Card(i, 1));
             }
         }
-        
+
         Collections.shuffle(pioche);
         ArrayList<Card> ligne1 = new ArrayList<>();
         ligne1.add(pioche.get(0));
@@ -134,9 +146,9 @@ public class GameLogic extends Application {
 
             Character character;
             if (i == 0) {
-                character = new Player(characterHand);
+                character = new Player(name, characterHand);
             } else {
-                character = new IA(characterHand);
+                character = new IA("IA", characterHand);
             }
             players.add(character);
         }

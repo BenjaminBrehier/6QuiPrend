@@ -1,13 +1,14 @@
 package fr.benjaminbrehier._6quiprend.Model;
-import fr.benjaminbrehier._6quiprend.Model.Card;
 
 import java.util.ArrayList;
 
 public abstract class Character{
     private ArrayList<Card> hand;
     private ArrayList<Card> points;
+    private String name;
 
-    public Character (ArrayList<Card> hand){
+    public Character (String name, ArrayList<Card> hand){
+        this.name = name;
         this.hand = hand;
         this.points = new ArrayList<Card>();
     }
@@ -27,6 +28,14 @@ public abstract class Character{
 
     public void setPoints(ArrayList<Card> points){
         this.points = points;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public void setName(String name){
+        this.name = name;
     }
 
     /*public Card play(){

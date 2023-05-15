@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class IA extends Character {
 
-    public IA (ArrayList<Card> hand){
-        super (hand);
+    public IA (String name, ArrayList<Card> hand){
+        super (name, hand);
     }
 }
