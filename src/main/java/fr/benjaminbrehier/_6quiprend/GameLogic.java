@@ -206,7 +206,16 @@ public class GameLogic extends Application {
 
             if(cartesJoueesTriees.size() > 0){
                 for (int j=0; j<cartesJoueesTriees.size(); j++){
-                    //cartesJoueesTriees.get
+                    boolean peuxJouer = false;
+                    int myLigne = 0;
+                    for (int k=0; k<board.getLignes().size(); k++){
+                        if(cartesJoueesTriees.get(j).getNumber() - board.getLignes().get(k).get(board.getLignes().get(k).size()-1).getNumber() < cartesJoueesTriees.get(j).getNumber() - board.getLignes().get(myLigne).get(board.getLignes().get(myLigne).size()-1).getNumber()){
+                            peuxJouer = true;
+                            myLigne = k;
+                        }
+
+                    }
+
 
                 }
             }
