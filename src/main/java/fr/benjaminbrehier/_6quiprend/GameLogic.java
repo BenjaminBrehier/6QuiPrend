@@ -45,31 +45,100 @@ public class GameLogic extends Application {
         Label nbJoueurLbl = new Label("Combien de joueurs? : 6");
         vbox.getChildren().add(nbJoueurLbl);
 
-        HBox nameBox = new HBox();
-        nameBox.setSpacing(10);
-        nameBox.setAlignment(Pos.CENTER);
-        nameBox.setPadding(new Insets(10));
-        Label nameLbl = new Label("Nom du joueur : ");
-        nameBox.getChildren().add(nameLbl);
-        TextField nameJoueur = new TextField();
-        nameJoueur.setPromptText("Nom du joueur");
-        nameBox.getChildren().add(nameJoueur);
-        vbox.getChildren().add(nameBox);
+        HBox nombreCharacterBox = new HBox();
+        nombreCharacterBox.setSpacing(10);
+        nombreCharacterBox.setAlignment(Pos.CENTER);
+        nombreCharacterBox.setPadding(new Insets(10));
 
-        Slider sliderNbJoueur = new Slider(2, 10, 6);
-        sliderNbJoueur.setShowTickLabels(true);
-        sliderNbJoueur.setShowTickMarks(true);
-        sliderNbJoueur.setMajorTickUnit(1);
-        sliderNbJoueur.setBlockIncrement(1);
-        sliderNbJoueur.setSnapToTicks(true);
-        sliderNbJoueur.setMinorTickCount(0);
-        sliderNbJoueur.setPrefWidth(300);
-        vbox.getChildren().add(sliderNbJoueur);
+        HBox nbJoueurBox = new HBox();
+        nbJoueurBox.setSpacing(10);
+        nbJoueurBox.setAlignment(Pos.CENTER);
+        nbJoueurBox.setPadding(new Insets(10));
+        Button btnMoins = new Button("-");
+        Button btnPlus = new Button("+");
+        TextField nbPlayer = new TextField();
+        nbPlayer.setText("1");
+        nbPlayer.setEditable(false);
+        nbPlayer.setMaxWidth(30);
+        nbJoueurBox.getChildren().add(btnMoins);
+        nbJoueurBox.getChildren().add(nbPlayer);
+        nbJoueurBox.getChildren().add(btnPlus);
+        
 
+        HBox nbIABox = new HBox();
+        nbIABox.setSpacing(10);
+        nbIABox.setAlignment(Pos.CENTER);
+        nbIABox.setPadding(new Insets(10));
+        Button btnMoinsIA = new Button("-");
+        Button btnPlusIA = new Button("+");
+        TextField nbIA = new TextField();
+        nbIA.setText("0");
+        nbIA.setEditable(false);
+        nbIA.setMaxWidth(30);
+        nbIABox.getChildren().add(btnMoinsIA);
+        nbIABox.getChildren().add(nbIA);
+        nbIABox.getChildren().add(btnPlusIA);
+
+
+        btnMoins.setOnAction(actionEvent -> {
+            if (Integer.parseInt(nbPlayer.getText()) > 0){
+                nbPlayer.setText(String.valueOf(Integer.parseInt(nbPlayer.getText()) - 1));
+                nbJoueurLbl.setText("Combien de joueurs ? : "+(Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()))+" sur 10 max");
+            }
+        });
+
+        btnPlus.setOnAction(actionEvent -> {
+            if (Integer.parseInt(nbPlayer.getText()) + Integer.parseInt(nbIA.getText()) < 10){
+                nbPlayer.setText(String.valueOf(Integer.parseInt(nbPlayer.getText()) + 1));
+                nbJoueurLbl.setText("Combien de joueurs ? : "+(Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()))+" sur 10 max");
+            }
+        });
+
+        btnMoinsIA.setOnAction(actionEvent -> {
+            if (Integer.parseInt(nbIA.getText()) > 0){
+                nbIA.setText(String.valueOf(Integer.parseInt(nbIA.getText()) - 1));
+                nbJoueurLbl.setText("Combien de joueurs ? : "+(Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()))+" sur 10 max");
+            }
+        });
+
+        btnPlusIA.setOnAction(actionEvent -> {
+            if (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()) < 10){
+                nbIA.setText(String.valueOf(Integer.parseInt(nbIA.getText()) + 1));
+                nbJoueurLbl.setText("Combien de joueurs ? : "+(Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()))+" sur 10 max");
+            }
+        });
+
+        nombreCharacterBox.getChildren().add(nbJoueurBox);
+        nombreCharacterBox.getChildren().add(nbIABox);
+        vbox.getChildren().add(nombreCharacterBox);
+
+        HBox modeBox = new HBox();
+        modeBox.setSpacing(10);
+        modeBox.setAlignment(Pos.CENTER);
+        modeBox.setPadding(new Insets(10));
+        Button btnLocal = new Button("Mode Local");
+        btnLocal.setStyle("-fx-background-color: #00ff00");
+        modeBox.getChildren().add(btnLocal);
+        Button btnReseau = new Button("Mode Réseau");
+        modeBox.getChildren().add(btnReseau);
+
+        btnLocal.setOnAction(actionEvent -> {
+            btnLocal.setStyle("-fx-background-color: #00ff00");
+            btnReseau.setStyle("-fx-background-color: #ffffff");
+        }); 
+        
+        btnReseau.setOnAction(actionEvent -> {
+            btnLocal.setStyle("-fx-background-color: #ffffff");
+            btnReseau.setStyle("-fx-background-color: #00ff00");
+        });
+
+
+
+        vbox.getChildren().add(modeBox);
 
         Button btn = new Button("Jouer");
         btn.setOnAction(actionEvent -> {
-            setup(sliderNbJoueur.getValue(), nameJoueur.getText());
+            setup(nbPlayer.getText(), nbIA.getText());
             board.reloadBoard();
         });
         vbox.getChildren().add(btn);
@@ -89,14 +158,11 @@ public class GameLogic extends Application {
         stage.setScene(scene);
         stage.show();
 
-        sliderNbJoueur.valueProperty().addListener((observable, oldValue, newValue) -> {
-            nbJoueurLbl.setText("Combien de joueurs ? : " + newValue.intValue()); // Met à jour le label avec la nouvelle valeur du slider
-        });
-        nbJoueurLbl.setText("Combien de joueurs ? : 6");
+        nbJoueurLbl.setText("Combien de joueurs ? : "+(Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()))+" sur 10 max");
 
         }
 
-    private void setup(double nbJoueur, String name) {
+    private void setup(String nbPlayer, String nbIA) {
         for (int i = 1; i<=104; i++){
             if (i%11 == 0){
                 if (i == 55) {
@@ -136,20 +202,28 @@ public class GameLogic extends Application {
         board.getLignes().add(ligne3);
         board.getLignes().add(ligne4);
 
-        for (int i = 0; i < nbJoueur; i++) {
+        for (int i = 0; i < Integer.parseInt(nbPlayer); i++) {
             ArrayList<Card> characterHand = new ArrayList<>();
             for (int j = 0; j<10; j++){
                 characterHand.add(pioche.get(0));
                 pioche.remove(0);
             }
 
-            Character character;
-            if (i == 0) {
-                character = new Player(name, characterHand);
-            } else {
-                character = new IA("IA", characterHand);
+            characterHand.sort(Comparator.comparing(Card::getNumber));
+            Player player = new Player("Player "+(i+1), characterHand);
+            players.add(player);
+        }
+
+        for (int i = 0; i < Integer.parseInt(nbIA); i++) {
+            ArrayList<Card> characterHand = new ArrayList<>();
+            for (int j = 0; j<10; j++){
+                characterHand.add(pioche.get(0));
+                pioche.remove(0);
             }
-            players.add(character);
+
+            characterHand.sort(Comparator.comparing(Card::getNumber));
+            IA ia = new IA("IA "+(i+1), characterHand);
+            players.add(ia);
         }
 
         jouer();
