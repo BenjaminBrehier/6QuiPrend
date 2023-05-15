@@ -16,6 +16,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 
 public class Board {
     private ArrayList<ArrayList<Card>> lignes;
@@ -40,17 +42,17 @@ public class Board {
     }
 
     public void reloadBoard() {
-        VBox vBox = new VBox();
-        vBox.setLayoutX(0);
-        vBox.setLayoutY(0);
-        vBox.setSpacing(10);
+        VBox lignesVBox = new VBox();
+        lignesVBox.setLayoutX(0);
+        lignesVBox.setLayoutY(0);
+        lignesVBox.setSpacing(10);
         for (int i = 0; i < lignes.size(); i++) {
             HBox vBox2 = new HBox();
             vBox2.setSpacing(10);
             for (int j = 0; j < lignes.get(i).size(); j++) {
                 vBox2.getChildren().add(lignes.get(i).get(j).getGraphicCard());
             }
-            vBox.getChildren().add(vBox2);
+            lignesVBox.getChildren().add(vBox2);
         }
 
         HBox playerHand = new HBox();
@@ -77,12 +79,11 @@ public class Board {
             // card.getGraphicCard().setOnMouseClicked(null);
             // });
         }
-
-        vBox.getChildren().add(playerHand);
+        lignesVBox.getChildren().add(playerHand);
 
         Pane board = new Pane();
-        vBox.setPadding(new Insets(10, 0, 0, 10));
-        board.getChildren().add(vBox);
+        lignesVBox.setPadding(new Insets(10, 0, 0, 10));
+        board.getChildren().add(lignesVBox);
         board.setStyle(
                 "-fx-background-size: 1440 855; -fx-background-image: url('https://img.freepik.com/vecteurs-libre/table-manger-bois-vue-dessus-vecteur-realiste_107791-13011.jpg?w=1380&t=st=1683874217~exp=1683874817~hmac=4a55c4c2786ec3d84229b244ac8af4ad194f73d72b5687727a81fb6b482a77e5')");
 
@@ -117,6 +118,27 @@ public class Board {
 
         playersPanel.getChildren().add(gridPane);
         board.getChildren().add(playersPanel);
+
+        Rectangle pointsRect = new Rectangle();
+        pointsRect.setFill(Color.WHITE);
+        pointsRect.setWidth(100);
+        pointsRect.setHeight(150);
+        pointsRect.setStroke(Color.BLACK);
+        pointsRect.setStrokeWidth(4);
+        pointsRect.setStrokeLineCap(StrokeLineCap.ROUND);
+        pointsRect.setStrokeLineJoin(StrokeLineJoin.ROUND);
+        pointsRect.setStrokeDashOffset(0);
+        pointsRect.setArcWidth(20);
+        pointsRect.setArcHeight(20);
+        pointsRect.setRotate(0);
+        pointsRect.setVisible(true);
+        pointsRect.toFront();
+        pointsRect.setLayoutX(1300);
+        pointsRect.setLayoutY(670);
+
+        board.getChildren().add(pointsRect);
+
+
         Scene scene = new Scene(board, 1440, 855);
 
         GameLogic.stage.setScene(scene);

@@ -11,7 +11,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,14 +28,14 @@ public class GameLogic extends Application {
     Board board = new Board(new ArrayList<ArrayList<Card>>());
     public static Stage stage;
 
-
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
         HBox hbox = new HBox();
         VBox vbox = new VBox();
 
-        ImageView logo = new ImageView(new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/logo.jpeg").toURI().toString()));
+        ImageView logo = new ImageView(new Image(
+                new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/logo.jpeg").toURI().toString()));
         logo.setFitWidth(250);
         logo.setFitHeight(250);
 
@@ -63,7 +62,6 @@ public class GameLogic extends Application {
         nbJoueurBox.getChildren().add(btnMoins);
         nbJoueurBox.getChildren().add(nbPlayer);
         nbJoueurBox.getChildren().add(btnPlus);
-        
 
         HBox nbIABox = new HBox();
         nbIABox.setSpacing(10);
@@ -79,32 +77,35 @@ public class GameLogic extends Application {
         nbIABox.getChildren().add(nbIA);
         nbIABox.getChildren().add(btnPlusIA);
 
-
         btnMoins.setOnAction(actionEvent -> {
-            if (Integer.parseInt(nbPlayer.getText()) > 0){
+            if (Integer.parseInt(nbPlayer.getText()) > 0) {
                 nbPlayer.setText(String.valueOf(Integer.parseInt(nbPlayer.getText()) - 1));
-                nbJoueurLbl.setText("Combien de joueurs ? : "+(Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()))+" sur 10 max");
+                nbJoueurLbl.setText("Combien de joueurs ? : "
+                        + (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText())) + " sur 10 max");
             }
         });
 
         btnPlus.setOnAction(actionEvent -> {
-            if (Integer.parseInt(nbPlayer.getText()) + Integer.parseInt(nbIA.getText()) < 10){
+            if (Integer.parseInt(nbPlayer.getText()) + Integer.parseInt(nbIA.getText()) < 10) {
                 nbPlayer.setText(String.valueOf(Integer.parseInt(nbPlayer.getText()) + 1));
-                nbJoueurLbl.setText("Combien de joueurs ? : "+(Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()))+" sur 10 max");
+                nbJoueurLbl.setText("Combien de joueurs ? : "
+                        + (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText())) + " sur 10 max");
             }
         });
 
         btnMoinsIA.setOnAction(actionEvent -> {
-            if (Integer.parseInt(nbIA.getText()) > 0){
+            if (Integer.parseInt(nbIA.getText()) > 0) {
                 nbIA.setText(String.valueOf(Integer.parseInt(nbIA.getText()) - 1));
-                nbJoueurLbl.setText("Combien de joueurs ? : "+(Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()))+" sur 10 max");
+                nbJoueurLbl.setText("Combien de joueurs ? : "
+                        + (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText())) + " sur 10 max");
             }
         });
 
         btnPlusIA.setOnAction(actionEvent -> {
-            if (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()) < 10){
+            if (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()) < 10) {
                 nbIA.setText(String.valueOf(Integer.parseInt(nbIA.getText()) + 1));
-                nbJoueurLbl.setText("Combien de joueurs ? : "+(Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()))+" sur 10 max");
+                nbJoueurLbl.setText("Combien de joueurs ? : "
+                        + (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText())) + " sur 10 max");
             }
         });
 
@@ -125,14 +126,12 @@ public class GameLogic extends Application {
         btnLocal.setOnAction(actionEvent -> {
             btnLocal.setStyle("-fx-background-color: #00ff00");
             btnReseau.setStyle("-fx-background-color: #ffffff");
-        }); 
-        
+        });
+
         btnReseau.setOnAction(actionEvent -> {
             btnLocal.setStyle("-fx-background-color: #ffffff");
             btnReseau.setStyle("-fx-background-color: #00ff00");
         });
-
-
 
         vbox.getChildren().add(modeBox);
 
@@ -158,27 +157,24 @@ public class GameLogic extends Application {
         stage.setScene(scene);
         stage.show();
 
-        nbJoueurLbl.setText("Combien de joueurs ? : "+(Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()))+" sur 10 max");
+        nbJoueurLbl.setText("Combien de joueurs ? : "
+                + (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText())) + " sur 10 max");
 
-        }
+    }
 
     private void setup(String nbPlayer, String nbIA) {
-        for (int i = 1; i<=104; i++){
-            if (i%11 == 0){
+        for (int i = 1; i <= 104; i++) {
+            if (i % 11 == 0) {
                 if (i == 55) {
                     pioche.add(new Card(i, 7));
-                }
-                else{
+                } else {
                     pioche.add(new Card(i, 5));
                 }
-            }
-            else if (i%10 == 0){
+            } else if (i % 10 == 0) {
                 pioche.add(new Card(i, 3));
-            }
-            else if (i%5 == 0){
+            } else if (i % 5 == 0) {
                 pioche.add(new Card(i, 2));
-            }
-            else{
+            } else {
                 pioche.add(new Card(i, 1));
             }
         }
@@ -204,100 +200,97 @@ public class GameLogic extends Application {
 
         for (int i = 0; i < Integer.parseInt(nbPlayer); i++) {
             ArrayList<Card> characterHand = new ArrayList<>();
-            for (int j = 0; j<10; j++){
+            for (int j = 0; j < 10; j++) {
                 characterHand.add(pioche.get(0));
                 pioche.remove(0);
             }
 
             characterHand.sort(Comparator.comparing(Card::getNumber));
-            Player player = new Player("Player "+(i+1), characterHand);
+            Player player = new Player("Player " + (i + 1), characterHand);
             players.add(player);
         }
 
         for (int i = 0; i < Integer.parseInt(nbIA); i++) {
             ArrayList<Card> characterHand = new ArrayList<>();
-            for (int j = 0; j<10; j++){
+            for (int j = 0; j < 10; j++) {
                 characterHand.add(pioche.get(0));
                 pioche.remove(0);
             }
 
             characterHand.sort(Comparator.comparing(Card::getNumber));
-            IA ia = new IA("IA "+(i+1), characterHand);
+            IA ia = new IA("IA " + (i + 1), characterHand);
             players.add(ia);
         }
 
         jouer();
-        // for (Character character : players) {
-        //     System.out.println("Liste des cartes du joueur : ");
-        //     for (int i = 0; i < character.getHand().size(); i++) {
-        //         System.out.println("Nombre :" + character.getHand().get(i).getNumber() + " | " + "Tête :" + character.getHand().get(i).getBullHead());
-        //     }
-        // }
     }
 
+    private void jouer() {
 
-    private void jouer(){
-
-        for (int i=0; i < 1; i++){
+        for (int i = 0; i < 1; i++) {
             System.out.println("État des 4 lignes :");
             System.out.println(board.getLignes().get(0).toString());
             System.out.println(board.getLignes().get(1).toString());
             System.out.println(board.getLignes().get(2).toString());
             System.out.println(board.getLignes().get(3).toString());
 
-            for (Character player :players){
+            for (Character player : players) {
                 System.out.println("Joueur : " + player + " || Cartes :");
                 System.out.println(player.getHand().toString());
             }
 
-            HashMap<String, Card> cartesJouees = new HashMap<>();
-            cartesJouees.put("jf", players.get(1).getHand().get(1));
-            cartesJouees.put("ezqt", players.get(2).getHand().get(1));
-            cartesJouees.put("eqsrgdhf", players.get(3).getHand().get(1));
-            cartesJouees.put("fsrgdhf", players.get(4).getHand().get(1));
-
-
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Quelle carte voulez vous jouer ? (mettez la position de la carte dans votre main, sachant que la première carte est en position 0 :");
-            int carteJouée = scanner.nextInt();
-
-            if (carteJouée < players.get(0).getHand().size()){
-                System.out.println("Vous jouez la carte " + players.get(0).getHand().get(carteJouée).toString());
-                cartesJouees.put(players.get(0).toString(), players.get(0).getHand().get(carteJouée));
+            HashMap<Character, Card> cartesJouees = new HashMap<>();
+            for (Character player : players) {
+                // Random card from player hand
+                int randomCard = (int) (Math.random() * player.getHand().size());
+                Card card = player.getHand().get(randomCard);
+                cartesJouees.put(player, card);
             }
-
-            //Trie des cartes dans la HashMap
-            cartesJouees.forEach((k,v)->System.out.println(k+"="+v));
+            
+            // Trie des cartes dans la HashMap
+            cartesJouees.forEach((k, v) -> System.out.println(k + "=" + v));
             System.out.println("After sorting by value");
-            List<Map.Entry<String, Card>> list = new ArrayList<>(cartesJouees.entrySet());
+            List<Map.Entry<Character, Card>> list = new ArrayList<>(cartesJouees.entrySet());
             list.sort(Comparator.comparingInt(e -> e.getValue().getNumber()));
-            LinkedHashMap<String, Card> cartesJoueesTriees = new LinkedHashMap<>();
-            for (Map.Entry<String, Card> entry : list) {
+            LinkedHashMap<Character, Card> cartesJoueesTriees = new LinkedHashMap<>();
+            for (Map.Entry<Character, Card> entry : list) {
                 cartesJoueesTriees.put(entry.getKey(), entry.getValue());
             }
             System.out.println("Sorted Map:");
-            cartesJoueesTriees.forEach((k,v)->System.out.println(k+"="+v));
+            cartesJoueesTriees.forEach((k, v) -> System.out.println(k + "=" + v));
 
-            if(cartesJoueesTriees.size() > 0){
-                for (int j=0; j<cartesJoueesTriees.size(); j++){
-                    boolean peuxJouer = false;
-                    int myLigne = 0;
-                    for (int k=0; k<board.getLignes().size(); k++){
-                        if(cartesJoueesTriees.get(j).getNumber() - board.getLignes().get(k).get(board.getLignes().get(k).size()-1).getNumber() < cartesJoueesTriees.get(j).getNumber() - board.getLignes().get(myLigne).get(board.getLignes().get(myLigne).size()-1).getNumber()){
-                            peuxJouer = true;
-                            myLigne = k;
+            if (cartesJoueesTriees.size() > 0) {
+                for (Map.Entry<Character, Card> testEntry : cartesJoueesTriees.entrySet()) {
+                    ArrayList<Card> ligne = null;
+                    Card card = (Card) testEntry.getValue();
+                    for (int j = 0; j < board.getLignes().size(); j++) {
+                        Card lastCard = board.getLignes().get(j).get(board.getLignes().get(j).size() - 1);
+
+                        System.out.println("Carte : " + card.toString() + " | Dernière carte de la ligne : "
+                                + lastCard.toString());
+                        if (ligne == null) {
+                            if (card.getNumber() > lastCard.getNumber()) {
+                                ligne = board.getLignes().get(j);
+                            }
+                        } else {
+                            System.out.println(card.getNumber() > lastCard.getNumber() && card.getNumber() - lastCard.getNumber() < card.getNumber() - ligne.get(ligne.size() - 1).getNumber());
+                            if (card.getNumber() > lastCard.getNumber() && card.getNumber() - lastCard.getNumber() < card.getNumber() - ligne.get(ligne.size() - 1).getNumber()) {
+                                ligne = board.getLignes().get(j);
+                            }
                         }
-
                     }
 
-
+                    if (ligne != null) {
+                        System.out.println("La carte " + card.toString() + " est ajoutée à la ligne " + ligne);
+                        Character joueur = (Character) testEntry.getKey();
+                        joueur.getHand().remove(card);
+                        ligne.add(card);
+                    } else {
+                        System.out.println("Aucune ligne ne peut accueillir cette carte : " + card.toString());
+                    }
                 }
             }
-            else{
-                break;
-            }
         }
-
     }
 
     public static void main(String[] args) {
