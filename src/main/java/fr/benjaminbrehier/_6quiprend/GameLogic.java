@@ -197,15 +197,15 @@ public class GameLogic extends Application {
             System.out.println("After sorting by value");
             List<Map.Entry<String, Card>> list = new ArrayList<>(cartesJouees.entrySet());
             list.sort(Comparator.comparingInt(e -> e.getValue().getNumber()));
-            HashMap<String, Card> cartesJoueesTriees = new HashMap<>();
+            LinkedHashMap<String, Card> cartesJoueesTriees = new LinkedHashMap<>();
             for (Map.Entry<String, Card> entry : list) {
                 cartesJoueesTriees.put(entry.getKey(), entry.getValue());
             }
             System.out.println("Sorted Map:");
             cartesJoueesTriees.forEach((k,v)->System.out.println(k+"="+v));
 
-            if(cartesJoueesTriees.size() == 0){
-                for (int i=0; i<cartesJoueesTriees.size(); i++){
+            if(cartesJoueesTriees.size() > 0){
+                for (int j=0; j<cartesJoueesTriees.size(); j++){
                     //cartesJoueesTriees.get
 
                 }
