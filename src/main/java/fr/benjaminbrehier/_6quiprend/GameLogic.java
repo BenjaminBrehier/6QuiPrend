@@ -180,7 +180,8 @@ public class GameLogic extends Application {
         }
 
         Collections.shuffle(pioche);
-        pioche.sort(Comparator.comparing(Card::getNumber));
+        //
+        // pioche.sort(Comparator.comparing(Card::getNumber));
         ArrayList<Card> ligne1 = new ArrayList<>();
         ligne1.add(pioche.get(0));
         pioche.remove(0);
@@ -255,11 +256,30 @@ public class GameLogic extends Application {
             players.add(ia);
         }
         jouer();
+
+        //Affichage du nombre de points de chaque player (IA + Humains) et calcul du gagnant
+        int joueurGagnant = -1; // Indice du joueur gagnant (-1 pour l'initialiser)
+        int minimumPoints = Integer.MAX_VALUE; // Initialise avec la plus grande valeur possible
+        for (int p = 0; p < players.size(); p++){
+            int totalPoints = 0; // Initialise le total de points du joueur
+            for (int gp = 0; gp < players.get(p).getPoints().size(); gp++){
+                totalPoints += players.get(p).getPoints().get(gp).getBullHead();
+            }
+            if (totalPoints < minimumPoints){
+                minimumPoints = totalPoints;
+                joueurGagnant = p;
+            }
+        }
+        if (joueurGagnant != -1) {
+            System.out.println("Le joueur " + players.get(joueurGagnant).getName() + " a le moins de points avec un total de " + minimumPoints + " têtes de taureau");
+        } else {
+            System.out.println("Aucun joueur trouvé");
+        }
     }
 
     private void jouer() {
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             System.out.println("État des 4 lignes :");
             System.out.println(board.getLignes().get(0).toString());
             System.out.println(board.getLignes().get(1).toString());
@@ -278,7 +298,7 @@ public class GameLogic extends Application {
                 Card card = player.getHand().get(randomCard);
                 cartesJouees.put(player, card);
             }
-            
+
             // Trie des cartes dans la HashMap
             cartesJouees.forEach((k, v) -> System.out.println(k + "=" + v));
             System.out.println("After sorting by value");
@@ -316,7 +336,7 @@ public class GameLogic extends Application {
                         System.out.println("La carte " + card.toString() + " est ajoutée à la ligne " + ligne);
                         Character joueur = (Character) testEntry.getKey();
                         joueur.getHand().remove(card);
-                        if (ligne.size() == 5){
+                        if (ligne.size() == 5) {
                             System.out.println("La ligne contenant la carte inférieure la plus proche est full, vous ramassez donc la ligne et vous posez votre carte en première position");
                             joueur.getPoints().addAll(ligne);
                             ligne.removeAll(ligne);
