@@ -25,7 +25,8 @@ import java.util.*;
 public class GameLogic extends Application {
     public static ArrayList<Card> pioche = new ArrayList<>();
     public static ArrayList<Character> players = new ArrayList<>();
-    Board board = new Board(new ArrayList<ArrayList<Card>>());
+    static Board board = new Board(new ArrayList<ArrayList<Card>>());
+    public static HashMap<Character, Card> cartesJouees = new HashMap<>();
     public static Stage stage;
 
     @Override
@@ -138,7 +139,7 @@ public class GameLogic extends Application {
         Button btn = new Button("Jouer");
         btn.setOnAction(actionEvent -> {
             setup(nbPlayer.getText(), nbIA.getText());
-            board.reloadBoard();
+            board.initBoard();
         });
         vbox.getChildren().add(btn);
 
@@ -180,51 +181,58 @@ public class GameLogic extends Application {
         }
 
         Collections.shuffle(pioche);
-        pioche.sort(Comparator.comparing(Card::getNumber));
         ArrayList<Card> ligne1 = new ArrayList<>();
         ligne1.add(pioche.get(0));
         pioche.remove(0);
-        /*ligne1.add(pioche.get(0));
-        pioche.remove(0);
-        ligne1.add(pioche.get(0));
-        pioche.remove(0);
-        ligne1.add(pioche.get(0));
-        pioche.remove(0);
-        ligne1.add(pioche.get(0));
-        pioche.remove(0);*/
+        
+        // ligne1.add(pioche.get(0));
+        // pioche.remove(0);
+        // ligne1.add(pioche.get(0));
+        // pioche.remove(0);
+        // ligne1.add(pioche.get(0));
+        // pioche.remove(0);
+        // ligne1.add(pioche.get(0));
+        // pioche.remove(0);
+         
         ArrayList<Card> ligne2 = new ArrayList<>();
         ligne2.add(pioche.get(0));
         pioche.remove(0);
-        /*ligne2.add(pioche.get(0));
-        pioche.remove(0);
-        ligne2.add(pioche.get(0));
-        pioche.remove(0);
-        ligne2.add(pioche.get(0));
-        pioche.remove(0);
-        ligne2.add(pioche.get(0));
-        pioche.remove(0);*/
+        /*
+         * ligne2.add(pioche.get(0));
+         * pioche.remove(0);
+         * ligne2.add(pioche.get(0));
+         * pioche.remove(0);
+         * ligne2.add(pioche.get(0));
+         * pioche.remove(0);
+         * ligne2.add(pioche.get(0));
+         * pioche.remove(0);
+         */
         ArrayList<Card> ligne3 = new ArrayList<>();
         ligne3.add(pioche.get(0));
         pioche.remove(0);
-        /*ligne3.add(pioche.get(0));
-        pioche.remove(0);
-        ligne3.add(pioche.get(0));
-        pioche.remove(0);
-        ligne3.add(pioche.get(0));
-        pioche.remove(0);
-        ligne3.add(pioche.get(0));
-        pioche.remove(0);*/
+        /*
+         * ligne3.add(pioche.get(0));
+         * pioche.remove(0);
+         * ligne3.add(pioche.get(0));
+         * pioche.remove(0);
+         * ligne3.add(pioche.get(0));
+         * pioche.remove(0);
+         * ligne3.add(pioche.get(0));
+         * pioche.remove(0);
+         */
         ArrayList<Card> ligne4 = new ArrayList<>();
         ligne4.add(pioche.get(0));
         pioche.remove(0);
-        /*ligne4.add(pioche.get(0));
-        pioche.remove(0);
-        ligne4.add(pioche.get(0));
-        pioche.remove(0);
-        ligne4.add(pioche.get(0));
-        pioche.remove(0);
-        ligne4.add(pioche.get(0));
-        pioche.remove(0);*/
+        /*
+         * ligne4.add(pioche.get(0));
+         * pioche.remove(0);
+         * ligne4.add(pioche.get(0));
+         * pioche.remove(0);
+         * ligne4.add(pioche.get(0));
+         * pioche.remove(0);
+         * ligne4.add(pioche.get(0));
+         * pioche.remove(0);
+         */
 
         board.getLignes().add(ligne1);
         board.getLignes().add(ligne2);
@@ -254,87 +262,94 @@ public class GameLogic extends Application {
             IA ia = new IA("IA " + (i + 1), characterHand);
             players.add(ia);
         }
-        jouer();
     }
 
-    private void jouer() {
-
-        for (int i = 0; i < 1; i++) {
-            System.out.println("État des 4 lignes :");
-            System.out.println(board.getLignes().get(0).toString());
-            System.out.println(board.getLignes().get(1).toString());
-            System.out.println(board.getLignes().get(2).toString());
-            System.out.println(board.getLignes().get(3).toString());
-
-            for (Character player : players) {
-                System.out.println("Joueur : " + player + " || Cartes :");
-                System.out.println(player.getHand().toString());
-            }
-
-            HashMap<Character, Card> cartesJouees = new HashMap<>();
-            for (Character player : players) {
-                // Random card from player hand
-                int randomCard = (int) (Math.random() * player.getHand().size());
-                Card card = player.getHand().get(randomCard);
-                cartesJouees.put(player, card);
-            }
-            
-            // Trie des cartes dans la HashMap
-            cartesJouees.forEach((k, v) -> System.out.println(k + "=" + v));
-            System.out.println("After sorting by value");
-            List<Map.Entry<Character, Card>> list = new ArrayList<>(cartesJouees.entrySet());
-            list.sort(Comparator.comparingInt(e -> e.getValue().getNumber()));
-            LinkedHashMap<Character, Card> cartesJoueesTriees = new LinkedHashMap<>();
-            for (Map.Entry<Character, Card> entry : list) {
-                cartesJoueesTriees.put(entry.getKey(), entry.getValue());
-            }
-            System.out.println("Sorted Map:");
-            cartesJoueesTriees.forEach((k, v) -> System.out.println(k + "=" + v));
-
-            if (cartesJoueesTriees.size() > 0) {
-                for (Map.Entry<Character, Card> testEntry : cartesJoueesTriees.entrySet()) {
-                    ArrayList<Card> ligne = null;
-                    Card card = (Card) testEntry.getValue();
-                    for (int j = 0; j < board.getLignes().size(); j++) {
-                        Card lastCard = board.getLignes().get(j).get(board.getLignes().get(j).size() - 1);
-
-                        System.out.println("Carte : " + card.toString() + " | Dernière carte de la ligne : "
-                                + lastCard.toString());
-                        if (ligne == null) {
-                            if (card.getNumber() > lastCard.getNumber()) {
-                                ligne = board.getLignes().get(j);
+    public static void jouer() {
+        if (cartesJouees.size() == players.size()) {
+            for (int i = 0; i < 1; i++) {
+                System.out.println("État des 4 lignes :");
+                System.out.println(board.getLignes().get(0).toString());
+                System.out.println(board.getLignes().get(1).toString());
+                System.out.println(board.getLignes().get(2).toString());
+                System.out.println(board.getLignes().get(3).toString());
+    
+                for (Character player : players) {
+                    System.out.println("Joueur : " + player + " || Cartes :");
+                    System.out.println(player.getHand().toString());
+                }
+    
+                // for (Character player : players) {
+                //     // Random card from player hand
+                //     int randomCard = (int) (Math.random() * player.getHand().size());
+                //     Card card = player.getHand().get(randomCard);
+                //     cartesJouees.put(player, card);
+                // }
+    
+                // Trie des cartes dans la HashMap
+                cartesJouees.forEach((k, v) -> System.out.println(k + "=" + v));
+                System.out.println("After sorting by value");
+                List<Map.Entry<Character, Card>> list = new ArrayList<>(cartesJouees.entrySet());
+                list.sort(Comparator.comparingInt(e -> e.getValue().getNumber()));
+                LinkedHashMap<Character, Card> cartesJoueesTriees = new LinkedHashMap<>();
+                for (Map.Entry<Character, Card> entry : list) {
+                    cartesJoueesTriees.put(entry.getKey(), entry.getValue());
+                }
+                System.out.println("Sorted Map:");
+                cartesJoueesTriees.forEach((k, v) -> System.out.println(k + "=" + v));
+    
+                if (cartesJoueesTriees.size() > 0) {
+                    for (Map.Entry<Character, Card> testEntry : cartesJoueesTriees.entrySet()) {
+                        ArrayList<Card> ligne = null;
+                        Card card = (Card) testEntry.getValue();
+                        for (int j = 0; j < board.getLignes().size(); j++) {
+                            Card lastCard = board.getLignes().get(j).get(board.getLignes().get(j).size() - 1);
+    
+                            System.out.println("Carte : " + card.toString() + " | Dernière carte de la ligne : "
+                                    + lastCard.toString());
+                            if (ligne == null) {
+                                if (card.getNumber() > lastCard.getNumber()) {
+                                    ligne = board.getLignes().get(j);
+                                }
+                            } else {
+                                System.out.println(card.getNumber() > lastCard.getNumber()
+                                        && card.getNumber() - lastCard.getNumber() < card.getNumber()
+                                                - ligne.get(ligne.size() - 1).getNumber());
+                                if (card.getNumber() > lastCard.getNumber()
+                                        && card.getNumber() - lastCard.getNumber() < card.getNumber()
+                                                - ligne.get(ligne.size() - 1).getNumber()) {
+                                    ligne = board.getLignes().get(j);
+                                }
                             }
+                        }
+    
+                        if (ligne != null) {
+                            System.out.println("La carte " + card.toString() + " est ajoutée à la ligne " + ligne);
+                            Character joueur = (Character) testEntry.getKey();
+                            joueur.getHand().remove(card);
+                            if (ligne.size() == 5) {
+                                System.out.println(
+                                        "La ligne contenant la carte inférieure la plus proche est full, vous ramassez donc la ligne et vous posez votre carte en première position");
+                                joueur.getPoints().addAll(ligne);
+                                ligne.removeAll(ligne);
+                            }
+                            ligne.add(card);
                         } else {
-                            System.out.println(card.getNumber() > lastCard.getNumber() && card.getNumber() - lastCard.getNumber() < card.getNumber() - ligne.get(ligne.size() - 1).getNumber());
-                            if (card.getNumber() > lastCard.getNumber() && card.getNumber() - lastCard.getNumber() < card.getNumber() - ligne.get(ligne.size() - 1).getNumber()) {
-                                ligne = board.getLignes().get(j);
-                            }
+                            board.addLignesEvent();
+                            System.out.println("Aucune ligne ne peut accueillir cette carte : " + card.toString());
+                            System.out.println("Choisissez une ligne à ramasser (1, 2, 3 ou 4)");
+                            Scanner scanner = new Scanner(System.in);
+                            int ligneARamasser = scanner.nextInt();
+                            Character joueur = (Character) testEntry.getKey();
+                            joueur.getHand().remove(card);
+                            joueur.getPoints().addAll(board.getLignes().get(ligneARamasser - 1));
+                            board.getLignes().get(ligneARamasser - 1).removeAll(board.getLignes().get(ligneARamasser - 1));
+                            board.getLignes().get(ligneARamasser - 1).add(card);
+                            System.out.println("Nouvelle ligne : " + board.getLignes().get(ligneARamasser - 1).toString());
                         }
-                    }
-
-                    if (ligne != null) {
-                        System.out.println("La carte " + card.toString() + " est ajoutée à la ligne " + ligne);
-                        Character joueur = (Character) testEntry.getKey();
-                        joueur.getHand().remove(card);
-                        if (ligne.size() == 5){
-                            System.out.println("La ligne contenant la carte inférieure la plus proche est full, vous ramassez donc la ligne et vous posez votre carte en première position");
-                            joueur.getPoints().addAll(ligne);
-                            ligne.removeAll(ligne);
-                        }
-                        ligne.add(card);
-                    } else {
-                        System.out.println("Aucune ligne ne peut accueillir cette carte : " + card.toString());
-                        System.out.println("Choisissez une ligne à ramasser (1, 2, 3 ou 4)");
-                        Scanner scanner = new Scanner(System.in);
-                        int ligneARamasser = scanner.nextInt();
-                        Character joueur = (Character) testEntry.getKey();
-                        joueur.getHand().remove(card);
-                        joueur.getPoints().addAll(board.getLignes().get(ligneARamasser - 1));
-                        board.getLignes().get(ligneARamasser - 1).removeAll(board.getLignes().get(ligneARamasser - 1));
-                        board.getLignes().get(ligneARamasser - 1).add(card);
-                        System.out.println("Nouvelle ligne : " + board.getLignes().get(ligneARamasser - 1).toString());
                     }
                 }
+                board.addCardsEvent();
+                board.reloadBoard();
             }
         }
     }

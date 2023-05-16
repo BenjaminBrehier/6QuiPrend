@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import fr.benjaminbrehier._6quiprend.GameLogic;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -18,6 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Board {
+    Pane board = new Pane();
+    public static ArrayList<Card> choosenArray = new ArrayList<Card>();
     private ArrayList<ArrayList<Card>> lignes;
 
     public Board(ArrayList<ArrayList<Card>> lignes) {
@@ -39,6 +42,115 @@ public class Board {
                 '}';
     }
 
+    public void removeCardsEvent() {
+        for (Card card : GameLogic.players.get(0).getHand()) {
+            card.getGraphicCard().setOnMouseEntered(mouseEvent -> {
+            });
+            card.getGraphicCard().setOnMouseExited(mouseEvent -> {
+            });
+            card.getGraphicCard().setOnMouseClicked(mouseEvent -> {
+            });
+        }
+
+
+        // for (int i = 4; i < ((VBox) board.getChildren().get(0)).getChildren().size(); i++) {
+        //     HBox hBox = (HBox) ((VBox) board.getChildren().get(0)).getChildren().get(i);
+        //     for (int j = 0; j < hBox.getChildren().size(); j++) {
+        //         Pane pane = (Pane) hBox.getChildren().get(j);
+        //         pane.setOnMouseEntered(mouseEvent -> {
+        //         });
+        //         pane.setOnMouseExited(mouseEvent -> {
+        //         });
+        //     }
+        // }
+    }
+
+    public void addCardsEvent() {
+        for (Card card : GameLogic.players.get(0).getHand()) {
+            //Events on cards
+            card.getGraphicCard().setOnMouseEntered(mouseEvent -> {
+                ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.RED);
+            });
+            card.getGraphicCard().setOnMouseExited(mouseEvent -> {
+                ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
+            });
+            card.getGraphicCard().setOnMouseClicked(mouseEvent -> {
+                removeCardsEvent();
+                System.out.println("Carte jouée : " + card);
+                GameLogic.players.get(0).getHand().remove(card);
+                GameLogic.cartesJouees.put(GameLogic.players.get(0), card);
+                GameLogic.players.get(0).setHasChoose(true);
+                // card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY() + 10);
+                ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
+                GameLogic.jouer();
+            });
+        }
+
+
+
+        // HBox hBox = (HBox) ((VBox) board.getChildren().get(0)).getChildren().get(4);
+        // for (int j = 0; j < hBox.getChildren().size(); j++) {
+        //     Pane pane = (Pane) hBox.getChildren().get(j);
+        //     pane.setOnMouseEntered(mouseEvent -> {
+        //         ((Rectangle) pane.getChildren().get(0)).setStroke(Color.RED);
+        //     });
+
+        //     pane.setOnMouseExited(mouseEvent -> {
+        //         ((Rectangle) pane.getChildren().get(0)).setStroke(Color.BLACK);
+        //     });
+
+        //     Card card = GameLogic.players.get(0).getHand().get(j);
+        //     pane.setOnMouseClicked(mouseEvent -> {
+        //         removeCardsEvent();
+        //         System.out.println("Carte jouée : " + card);
+        //         GameLogic.players.get(0).getHand().remove(card);
+        //         GameLogic.cartesJouees.put(GameLogic.players.get(0), card);
+        //         GameLogic.players.get(0).setHasChoose(true);
+        //         // card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY() + 10);
+        //         ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
+        //         GameLogic.jouer();
+        //     });
+        // }
+    }
+
+    public void addLignesEvent() {
+        for (int i = 0; i < ((VBox) board.getChildren().get(0)).getChildren().size() - 1; i++) {
+            HBox hBox = (HBox) ((VBox) board.getChildren().get(0)).getChildren().get(i);
+            hBox.setOnMouseEntered(mouseEvent -> {
+                for (int j = 0; j < hBox.getChildren().size(); j++) {
+                    ((Rectangle) ((Pane) hBox.getChildren().get(j)).getChildren().get(0)).setStroke(Color.RED);
+                }
+            });
+
+            hBox.setOnMouseExited(mouseEvent -> {
+                for (int j = 0; j < hBox.getChildren().size(); j++) {
+                    ((Rectangle) ((Pane) hBox.getChildren().get(j)).getChildren().get(0)).setStroke(Color.BLACK);
+                }
+            });
+
+            hBox.setOnMouseClicked(mouseEvent -> {
+                removeLignesEvent();
+                choosenArray = lignes.get(((VBox) board.getChildren().get(0)).getChildren().indexOf(hBox));
+            });
+        }
+    }
+
+    public void removeLignesEvent() {
+        for (int i = 0; i < ((VBox) board.getChildren().get(0)).getChildren().size() - 1; i++) {
+            HBox hBox = (HBox) ((VBox) board.getChildren().get(0)).getChildren().get(i);
+            hBox.setOnMouseEntered(mouseEvent -> {
+            });
+            hBox.setOnMouseExited(mouseEvent -> {
+            });
+        }
+    }
+
+    public void initBoard() {
+        reloadBoard();
+        Scene scene = new Scene(board, 1440, 855);
+        GameLogic.stage.setScene(scene);
+    }
+
     public void reloadBoard() {
         VBox lignesVBox = new VBox();
         lignesVBox.setLayoutX(0);
@@ -50,17 +162,6 @@ public class Board {
             for (int j = 0; j < lignes.get(i).size(); j++) {
                 vBox2.getChildren().add(lignes.get(i).get(j).getGraphicCard());
             }
-            vBox2.setOnMouseEntered(mouseEvent -> {
-                for (int j = 0; j < vBox2.getChildren().size(); j++) {
-                    ((Rectangle) ((Pane) vBox2.getChildren().get(j)).getChildren().get(0)).setStroke(Color.RED);
-                }
-            });
-
-            vBox2.setOnMouseExited(mouseEvent -> {
-                for (int j = 0; j < vBox2.getChildren().size(); j++) {
-                    ((Rectangle) ((Pane) vBox2.getChildren().get(j)).getChildren().get(0)).setStroke(Color.BLACK);
-                }
-            });
             lignesVBox.getChildren().add(vBox2);
         }
 
@@ -71,26 +172,38 @@ public class Board {
 
         for (Card card : GameLogic.players.get(0).getHand()) {
             playerHand.getChildren().add(card.getGraphicCard());
-            card.getGraphicCard().setOnMouseEntered(mouseEvent -> {
-                card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY() - 10);
-                ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.RED);
-            });
+            // card.getGraphicCard().setOnMouseEntered(mouseEvent -> {
+            // // card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY()
+            // - 10);
+            // ((Rectangle)
+            // card.getGraphicCard().getChildren().get(0)).setStroke(Color.RED);
+            // });
 
-            card.getGraphicCard().setOnMouseExited(mouseEvent -> {
-                card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY() + 10);
-                ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
-            });
+            // card.getGraphicCard().setOnMouseExited(mouseEvent -> {
+            // // card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY()
+            // + 10);
+            // ((Rectangle)
+            // card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
+            // });
 
             // // Remove events on click
             // card.getGraphicCard().setOnMouseClicked(mouseEvent -> {
+            // System.out.println("Carte jouée : " + card);
+            // GameLogic.players.get(0).getHand().remove(card);
+            // GameLogic.cartesJouees.put(GameLogic.players.get(0), card);
+            // GameLogic.players.get(0).setHasChoose(true);
+            // // card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY()
+            // + 10);
+            // ((Rectangle)
+            // card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
             // card.getGraphicCard().setOnMouseEntered(null);
             // card.getGraphicCard().setOnMouseExited(null);
             // card.getGraphicCard().setOnMouseClicked(null);
+            // GameLogic.jouer();
             // });
         }
         lignesVBox.getChildren().add(playerHand);
 
-        Pane board = new Pane();
         lignesVBox.setPadding(new Insets(10, 0, 0, 10));
         board.getChildren().add(lignesVBox);
         board.setStyle(
@@ -128,19 +241,23 @@ public class Board {
         playersPanel.getChildren().add(gridPane);
         board.getChildren().add(playersPanel);
 
+        Pane points = new Pane();
+        points.setLayoutX(1300);
+        points.setLayoutY(670);
+        points.setPrefWidth(100);
+        points.setPrefHeight(100);
+        board.getChildren().add(points);
 
         for (Card card : GameLogic.players.get(0).getPoints()) {
-            card.getGraphicCard().setTranslateX(1300);
-            card.getGraphicCard().setTranslateY(670);
-
             // Random rotate between -10 and 10
-            card.getGraphicCard().setRotate(Math.random() * 20 - 10);
+            card.getGraphicCard().setRotate(Math.random() * 30 - 10);
+            card.getGraphicCard().setLayoutX(0);
+            card.getGraphicCard().setLayoutY(0);
             card.getGraphicCard().toFront();
-            board.getChildren().add(card.getGraphicCard());
+            points.getChildren().add(card.getGraphicCard());
+            // board.getChildren().add(card.getGraphicCard());
         }
 
-        Scene scene = new Scene(board, 1440, 855);
-
-        GameLogic.stage.setScene(scene);
+        addCardsEvent();
     }
 }
