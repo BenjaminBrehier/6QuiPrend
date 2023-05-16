@@ -16,8 +16,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeLineJoin;
 
 public class Board {
     private ArrayList<ArrayList<Card>> lignes;
@@ -52,6 +50,17 @@ public class Board {
             for (int j = 0; j < lignes.get(i).size(); j++) {
                 vBox2.getChildren().add(lignes.get(i).get(j).getGraphicCard());
             }
+            vBox2.setOnMouseEntered(mouseEvent -> {
+                for (int j = 0; j < vBox2.getChildren().size(); j++) {
+                    ((Rectangle) ((Pane) vBox2.getChildren().get(j)).getChildren().get(0)).setStroke(Color.RED);
+                }
+            });
+
+            vBox2.setOnMouseExited(mouseEvent -> {
+                for (int j = 0; j < vBox2.getChildren().size(); j++) {
+                    ((Rectangle) ((Pane) vBox2.getChildren().get(j)).getChildren().get(0)).setStroke(Color.BLACK);
+                }
+            });
             lignesVBox.getChildren().add(vBox2);
         }
 
@@ -90,7 +99,7 @@ public class Board {
         Pane playersPanel = new Pane();
         playersPanel.setPrefWidth(440);
         playersPanel.setPrefHeight(610);
-        playersPanel.setLayoutX(950);
+        playersPanel.setLayoutX(1150);
         playersPanel.setLayoutY(20);
         playersPanel.setStyle(
                 "-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: #000000; -fx-border-width: 2px;");
@@ -119,25 +128,16 @@ public class Board {
         playersPanel.getChildren().add(gridPane);
         board.getChildren().add(playersPanel);
 
-        Rectangle pointsRect = new Rectangle();
-        pointsRect.setFill(Color.WHITE);
-        pointsRect.setWidth(100);
-        pointsRect.setHeight(150);
-        pointsRect.setStroke(Color.BLACK);
-        pointsRect.setStrokeWidth(4);
-        pointsRect.setStrokeLineCap(StrokeLineCap.ROUND);
-        pointsRect.setStrokeLineJoin(StrokeLineJoin.ROUND);
-        pointsRect.setStrokeDashOffset(0);
-        pointsRect.setArcWidth(20);
-        pointsRect.setArcHeight(20);
-        pointsRect.setRotate(0);
-        pointsRect.setVisible(true);
-        pointsRect.toFront();
-        pointsRect.setLayoutX(1300);
-        pointsRect.setLayoutY(670);
 
-        board.getChildren().add(pointsRect);
+        for (Card card : GameLogic.players.get(0).getPoints()) {
+            card.getGraphicCard().setTranslateX(1300);
+            card.getGraphicCard().setTranslateY(670);
 
+            // Random rotate between -10 and 10
+            card.getGraphicCard().setRotate(Math.random() * 20 - 10);
+            card.getGraphicCard().toFront();
+            board.getChildren().add(card.getGraphicCard());
+        }
 
         Scene scene = new Scene(board, 1440, 855);
 
