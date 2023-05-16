@@ -262,6 +262,26 @@ public class GameLogic extends Application {
             IA ia = new IA("IA " + (i + 1), characterHand);
             players.add(ia);
         }
+        jouer();
+
+        //Affichage du nombre de points de chaque player (IA + Humains) et calcul du gagnant
+        int joueurGagnant = -1; // Indice du joueur gagnant (-1 pour l'initialiser)
+        int minimumPoints = Integer.MAX_VALUE; // Initialise avec la plus grande valeur possible
+        for (int p = 0; p < players.size(); p++){
+            int totalPoints = 0; // Initialise le total de points du joueur
+            for (int gp = 0; gp < players.get(p).getPoints().size(); gp++){
+                totalPoints += players.get(p).getPoints().get(gp).getBullHead();
+            }
+            if (totalPoints < minimumPoints){
+                minimumPoints = totalPoints;
+                joueurGagnant = p;
+            }
+        }
+        if (joueurGagnant != -1) {
+            System.out.println("Le joueur " + players.get(joueurGagnant).getName() + " a le moins de points avec un total de " + minimumPoints + " têtes de taureau");
+        } else {
+            System.out.println("Aucun joueur trouvé");
+        }
     }
 
     public static void jouer() {
