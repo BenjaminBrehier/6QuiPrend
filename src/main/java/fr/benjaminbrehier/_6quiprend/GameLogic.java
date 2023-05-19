@@ -9,9 +9,12 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -184,7 +187,7 @@ public class GameLogic extends Application {
         ArrayList<Card> ligne1 = new ArrayList<>();
         ligne1.add(pioche.get(0));
         pioche.remove(0);
-        
+
         // ligne1.add(pioche.get(0));
         // pioche.remove(0);
         // ligne1.add(pioche.get(0));
@@ -193,7 +196,7 @@ public class GameLogic extends Application {
         // pioche.remove(0);
         // ligne1.add(pioche.get(0));
         // pioche.remove(0);
-         
+
         ArrayList<Card> ligne2 = new ArrayList<>();
         ligne2.add(pioche.get(0));
         pioche.remove(0);
@@ -264,21 +267,23 @@ public class GameLogic extends Application {
         }
         jouer();
 
-        //Affichage du nombre de points de chaque player (IA + Humains) et calcul du gagnant
+        // Affichage du nombre de points de chaque player (IA + Humains) et calcul du
+        // gagnant
         int joueurGagnant = -1; // Indice du joueur gagnant (-1 pour l'initialiser)
         int minimumPoints = Integer.MAX_VALUE; // Initialise avec la plus grande valeur possible
-        for (int p = 0; p < players.size(); p++){
+        for (int p = 0; p < players.size(); p++) {
             int totalPoints = 0; // Initialise le total de points du joueur
-            for (int gp = 0; gp < players.get(p).getPoints().size(); gp++){
+            for (int gp = 0; gp < players.get(p).getPoints().size(); gp++) {
                 totalPoints += players.get(p).getPoints().get(gp).getBullHead();
             }
-            if (totalPoints < minimumPoints){
+            if (totalPoints < minimumPoints) {
                 minimumPoints = totalPoints;
                 joueurGagnant = p;
             }
         }
         if (joueurGagnant != -1) {
-            System.out.println("Le joueur " + players.get(joueurGagnant).getName() + " a le moins de points avec un total de " + minimumPoints + " têtes de taureau");
+            System.out.println("Le joueur " + players.get(joueurGagnant).getName()
+                    + " a le moins de points avec un total de " + minimumPoints + " têtes de taureau");
         } else {
             System.out.println("Aucun joueur trouvé");
         }
@@ -292,19 +297,19 @@ public class GameLogic extends Application {
                 System.out.println(board.getLignes().get(1).toString());
                 System.out.println(board.getLignes().get(2).toString());
                 System.out.println(board.getLignes().get(3).toString());
-    
+
                 for (Character player : players) {
                     System.out.println("Joueur : " + player + " || Cartes :");
                     System.out.println(player.getHand().toString());
                 }
-    
+
                 // for (Character player : players) {
-                //     // Random card from player hand
-                //     int randomCard = (int) (Math.random() * player.getHand().size());
-                //     Card card = player.getHand().get(randomCard);
-                //     cartesJouees.put(player, card);
+                // // Random card from player hand
+                // int randomCard = (int) (Math.random() * player.getHand().size());
+                // Card card = player.getHand().get(randomCard);
+                // cartesJouees.put(player, card);
                 // }
-    
+
                 // Trie des cartes dans la HashMap
                 cartesJouees.forEach((k, v) -> System.out.println(k + "=" + v));
                 System.out.println("After sorting by value");
@@ -316,14 +321,14 @@ public class GameLogic extends Application {
                 }
                 System.out.println("Sorted Map:");
                 cartesJoueesTriees.forEach((k, v) -> System.out.println(k + "=" + v));
-    
+
                 if (cartesJoueesTriees.size() > 0) {
                     for (Map.Entry<Character, Card> testEntry : cartesJoueesTriees.entrySet()) {
                         ArrayList<Card> ligne = null;
                         Card card = (Card) testEntry.getValue();
                         for (int j = 0; j < board.getLignes().size(); j++) {
                             Card lastCard = board.getLignes().get(j).get(board.getLignes().get(j).size() - 1);
-    
+
                             System.out.println("Carte : " + card.toString() + " | Dernière carte de la ligne : "
                                     + lastCard.toString());
                             if (ligne == null) {
@@ -341,7 +346,7 @@ public class GameLogic extends Application {
                                 }
                             }
                         }
-    
+
                         if (ligne != null) {
                             System.out.println("La carte " + card.toString() + " est ajoutée à la ligne " + ligne);
                             Character joueur = (Character) testEntry.getKey();
@@ -354,17 +359,37 @@ public class GameLogic extends Application {
                             }
                             ligne.add(card);
                         } else {
-                            board.addLignesEvent();
-                            System.out.println("Aucune ligne ne peut accueillir cette carte : " + card.toString());
-                            System.out.println("Choisissez une ligne à ramasser (1, 2, 3 ou 4)");
-                            Scanner scanner = new Scanner(System.in);
-                            int ligneARamasser = scanner.nextInt();
-                            Character joueur = (Character) testEntry.getKey();
-                            joueur.getHand().remove(card);
-                            joueur.getPoints().addAll(board.getLignes().get(ligneARamasser - 1));
-                            board.getLignes().get(ligneARamasser - 1).removeAll(board.getLignes().get(ligneARamasser - 1));
-                            board.getLignes().get(ligneARamasser - 1).add(card);
-                            System.out.println("Nouvelle ligne : " + board.getLignes().get(ligneARamasser - 1).toString());
+                            Alert alert = new Alert(AlertType.CONFIRMATION);
+                            alert.setTitle("Sélection de ligne");
+                            alert.setHeaderText("Veuillez choisir une ligne");
+                            alert.setContentText("Aucune ligne ne peut accueillir cette carte : " + card.toString());
+
+                            ButtonType buttonType1 = new ButtonType("1");
+                            ButtonType buttonType2 = new ButtonType("2");
+                            ButtonType buttonType3 = new ButtonType("3");
+                            ButtonType buttonType4 = new ButtonType("4");
+                            alert.getButtonTypes().setAll(buttonType1, buttonType2, buttonType3, buttonType4);
+
+                            alert.showAndWait().ifPresent(buttonType -> {
+                                int ligneARamasser = 0; 
+                                if (buttonType == buttonType1) {
+                                    ligneARamasser = 1;
+                                } else if (buttonType == buttonType2) {
+                                    ligneARamasser = 2;
+                                } else if (buttonType == buttonType3) {
+                                    ligneARamasser = 3;
+                                } else if (buttonType == buttonType4) {
+                                    ligneARamasser = 4;
+                                }
+                                Character joueur = (Character) testEntry.getKey();
+                                joueur.getHand().remove(card);
+                                joueur.getPoints().addAll(board.getLignes().get(ligneARamasser - 1));
+                                board.getLignes().get(ligneARamasser - 1)
+                                        .removeAll(board.getLignes().get(ligneARamasser - 1));
+                                board.getLignes().get(ligneARamasser - 1).add(card);
+                                System.out.println(
+                                        "Nouvelle ligne : " + board.getLignes().get(ligneARamasser - 1).toString());
+                            });
                         }
                     }
                 }
