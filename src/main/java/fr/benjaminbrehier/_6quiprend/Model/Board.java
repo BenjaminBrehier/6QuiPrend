@@ -17,6 +17,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
+import javafx.scene.text.Font;
 
 public class Board {
     Pane board = new Pane();
@@ -85,32 +88,6 @@ public class Board {
                 GameLogic.jouer();
             });
         }
-
-
-
-        // HBox hBox = (HBox) ((VBox) board.getChildren().get(0)).getChildren().get(4);
-        // for (int j = 0; j < hBox.getChildren().size(); j++) {
-        //     Pane pane = (Pane) hBox.getChildren().get(j);
-        //     pane.setOnMouseEntered(mouseEvent -> {
-        //         ((Rectangle) pane.getChildren().get(0)).setStroke(Color.RED);
-        //     });
-
-        //     pane.setOnMouseExited(mouseEvent -> {
-        //         ((Rectangle) pane.getChildren().get(0)).setStroke(Color.BLACK);
-        //     });
-
-        //     Card card = GameLogic.players.get(0).getHand().get(j);
-        //     pane.setOnMouseClicked(mouseEvent -> {
-        //         removeCardsEvent();
-        //         System.out.println("Carte jouée : " + card);
-        //         GameLogic.players.get(0).getHand().remove(card);
-        //         GameLogic.cartesJouees.put(GameLogic.players.get(0), card);
-        //         GameLogic.players.get(0).setHasChoose(true);
-        //         // card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY() + 10);
-        //         ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
-        //         GameLogic.jouer();
-        //     });
-        // }
     }
 
     public void addLignesEvent() {
@@ -172,35 +149,6 @@ public class Board {
 
         for (Card card : GameLogic.players.get(0).getHand()) {
             playerHand.getChildren().add(card.getGraphicCard());
-            // card.getGraphicCard().setOnMouseEntered(mouseEvent -> {
-            // // card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY()
-            // - 10);
-            // ((Rectangle)
-            // card.getGraphicCard().getChildren().get(0)).setStroke(Color.RED);
-            // });
-
-            // card.getGraphicCard().setOnMouseExited(mouseEvent -> {
-            // // card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY()
-            // + 10);
-            // ((Rectangle)
-            // card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
-            // });
-
-            // // Remove events on click
-            // card.getGraphicCard().setOnMouseClicked(mouseEvent -> {
-            // System.out.println("Carte jouée : " + card);
-            // GameLogic.players.get(0).getHand().remove(card);
-            // GameLogic.cartesJouees.put(GameLogic.players.get(0), card);
-            // GameLogic.players.get(0).setHasChoose(true);
-            // // card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY()
-            // + 10);
-            // ((Rectangle)
-            // card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
-            // card.getGraphicCard().setOnMouseEntered(null);
-            // card.getGraphicCard().setOnMouseExited(null);
-            // card.getGraphicCard().setOnMouseClicked(null);
-            // GameLogic.jouer();
-            // });
         }
         lignesVBox.getChildren().add(playerHand);
 
@@ -209,37 +157,56 @@ public class Board {
         board.setStyle(
                 "-fx-background-size: 1440 855; -fx-background-image: url('https://img.freepik.com/vecteurs-libre/table-manger-bois-vue-dessus-vecteur-realiste_107791-13011.jpg?w=1380&t=st=1683874217~exp=1683874817~hmac=4a55c4c2786ec3d84229b244ac8af4ad194f73d72b5687727a81fb6b482a77e5')");
 
-        Pane playersPanel = new Pane();
-        playersPanel.setPrefWidth(440);
-        playersPanel.setPrefHeight(610);
-        playersPanel.setLayoutX(1150);
-        playersPanel.setLayoutY(20);
-        playersPanel.setStyle(
-                "-fx-background-color: #ffffff; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: #000000; -fx-border-width: 2px;");
-
         GridPane gridPane = new GridPane();
+        gridPane.setPrefWidth(640);
+        gridPane.setPrefHeight(610);
+        gridPane.setLayoutX(800);
+        gridPane.setLayoutY(-100);
+
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setPadding(new Insets(10, 0, 0, 10));
+
+        int cptCol = 0;
+        int cptLigne = 0;
         for (int i = 0; i < GameLogic.players.size(); i++) {
+            VBox playerBox = new VBox();
+            playerBox.setSpacing(10);
+            playerBox.setAlignment(Pos.CENTER);
 
             Label label = new Label(GameLogic.players.get(i).getName());
-            label.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+            label.setFont(new Font("Arial", 20));
+            label.setTextFill(Color.WHITE);
 
-            ImageView icon = new ImageView(new Image(
-                    new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/perso.png").toURI().toString()));
-            icon.setFitHeight(50);
-            icon.setFitWidth(50);
-            icon.setPreserveRatio(true);
+            playerBox.getChildren().add(label);
+            Rectangle rectangle = new Rectangle();
+            rectangle.setFill(Color.TRANSPARENT);
+            rectangle.setWidth(100);
+            rectangle.setHeight(150);
+            rectangle.setStroke(Color.BLACK);
+            rectangle.setStrokeWidth(4);
+            rectangle.setStrokeLineCap(StrokeLineCap.ROUND);
+            rectangle.setStrokeLineJoin(StrokeLineJoin.ROUND);
+            rectangle.setStrokeDashOffset(0);
+            rectangle.setArcWidth(20);
+            rectangle.setArcHeight(20);
+            rectangle.setRotate(0);
+            rectangle.setVisible(true);
+            rectangle.toFront();
+            playerBox.getChildren().add(rectangle);
+            // playerBox.getChildren().add(GameLogic.players.get(i).getHand().get(0).getGraphicCard());
 
-            // Placer l'icon à gauche du label, s'arranger pour que ce soit aligné à gauche
-            gridPane.add(icon, 0, i);
-            gridPane.add(label, 1, i);
+            //Si 5 cartes sont déjà posées sur la table, on ajoute une ligne
+            if (cptCol == 5) {
+                cptCol = 0;
+                gridPane.add(playerBox, cptCol++, ++cptLigne);
+            } else {
+                gridPane.add(playerBox, cptCol++, cptLigne);
+            }
         }
 
-        playersPanel.getChildren().add(gridPane);
-        board.getChildren().add(playersPanel);
+        board.getChildren().add(gridPane);
 
         Pane points = new Pane();
         points.setLayoutX(1300);
