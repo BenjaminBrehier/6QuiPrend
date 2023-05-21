@@ -1,16 +1,12 @@
 package fr.benjaminbrehier._6quiprend.Model;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import fr.benjaminbrehier._6quiprend.GameLogic;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -195,7 +191,7 @@ public class Board {
             rectangle.setVisible(true);
             rectangle.toFront();
             playerBox.getChildren().add(rectangle);
-            // playerBox.getChildren().add(GameLogic.players.get(i).getHand().get(0).getGraphicCard());
+            // playerBox.getChildren().add(GameLogic.players.get(i).getHand().get(0).getBackCard());
 
             //Si 5 cartes sont déjà posées sur la table, on ajoute une ligne
             if (cptCol == 5) {
