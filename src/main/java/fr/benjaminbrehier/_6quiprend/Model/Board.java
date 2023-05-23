@@ -3,6 +3,7 @@ package fr.benjaminbrehier._6quiprend.Model;
 import java.util.ArrayList;
 
 import fr.benjaminbrehier._6quiprend.GameLogic;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 public class Board {
     Pane board = new Pane();
@@ -119,12 +121,12 @@ public class Board {
     }
 
     public void initBoard() {
-        reloadBoard();
+        reloadBoard(false);
         Scene scene = new Scene(board, 1440, 855);
         GameLogic.stage.setScene(scene);
     }
 
-    public void reloadBoard() {
+    public void reloadBoard(boolean wait) {
         VBox lignesVBox = new VBox();
         lignesVBox.setLayoutX(0);
         lignesVBox.setLayoutY(0);
@@ -150,10 +152,50 @@ public class Board {
 
         lignesVBox.setPadding(new Insets(10, 0, 0, 10));
         board.getChildren().add(lignesVBox);
-        board.setStyle(
-                "-fx-background-size: 1440 855; -fx-background-image: url('https://img.freepik.com/vecteurs-libre/table-manger-bois-vue-dessus-vecteur-realiste_107791-13011.jpg?w=1380&t=st=1683874217~exp=1683874817~hmac=4a55c4c2786ec3d84229b244ac8af4ad194f73d72b5687727a81fb6b482a77e5')");
+        board.setStyle("-fx-background-size: 1440 855; -fx-background-image: url('https://img.freepik.com/vecteurs-libre/table-manger-bois-vue-dessus-vecteur-realiste_107791-13011.jpg?w=1380&t=st=1683874217~exp=1683874817~hmac=4a55c4c2786ec3d84229b244ac8af4ad194f73d72b5687727a81fb6b482a77e5')");
 
+        reloadPanel(false);
+
+        Pane points = new Pane();
+        points.setLayoutX(1300);
+        points.setLayoutY(670);
+        points.setPrefWidth(100);
+        points.setPrefHeight(100);
+        board.getChildren().add(points);
+
+
+        // On fait disparaitre les cartes les cartes ramassées par les autres joueurs
+        for (int i = 1; i < GameLogic.players.size(); i++) {
+            for (Card card : GameLogic.players.get(i).getPoints()) {
+                card.getGraphicCard().setVisible(false);
+            }
+        }
+
+        for (Card card : GameLogic.players.get(0).getPoints()) {
+            card.getGraphicCard().setRotate(Math.random() * 30 - 10);
+            card.getGraphicCard().setLayoutX(0);
+            card.getGraphicCard().setLayoutY(0);
+            card.getGraphicCard().toFront();
+            points.getChildren().add(card.getGraphicCard());
+        }
+
+        if (wait) {
+            // try {
+            //     Thread.sleep(2000);
+            // } catch (InterruptedException e) {
+            //     e.printStackTrace();
+            // }
+        } else {
+            addCardsEvent();
+        }
+    }
+
+    public void reloadPanel(boolean showCard) {
         GridPane gridPane = new GridPane();
+        if (board.getChildren().size() > 1) {
+            gridPane = (GridPane) board.getChildren().get(1);
+            gridPane.getChildren().clear();
+        }
         gridPane.setPrefWidth(640);
         gridPane.setPrefHeight(610);
         gridPane.setLayoutX(800);
@@ -190,10 +232,14 @@ public class Board {
             rectangle.setRotate(0);
             rectangle.setVisible(true);
             rectangle.toFront();
-            playerBox.getChildren().add(rectangle);
-            // playerBox.getChildren().add(GameLogic.players.get(i).getHand().get(0).getBackCard());
 
-            //Si 5 cartes sont déjà posées sur la table, on ajoute une ligne
+            if (GameLogic.cartesJouees.containsKey(GameLogic.players.get(i))) {
+                if (showCard)
+                    playerBox.getChildren().add(GameLogic.cartesJouees.get(GameLogic.players.get(i)).getGraphicCard());
+            } else {
+                playerBox.getChildren().add(rectangle);
+            }
+
             if (cptCol == 5) {
                 cptCol = 0;
                 gridPane.add(playerBox, cptCol++, ++cptLigne);
@@ -202,25 +248,20 @@ public class Board {
             }
         }
 
-        board.getChildren().add(gridPane);
-
-        Pane points = new Pane();
-        points.setLayoutX(1300);
-        points.setLayoutY(670);
-        points.setPrefWidth(100);
-        points.setPrefHeight(100);
-        board.getChildren().add(points);
-
-        for (Card card : GameLogic.players.get(0).getPoints()) {
-            // Random rotate between -10 and 10
-            card.getGraphicCard().setRotate(Math.random() * 30 - 10);
-            card.getGraphicCard().setLayoutX(0);
-            card.getGraphicCard().setLayoutY(0);
-            card.getGraphicCard().toFront();
-            points.getChildren().add(card.getGraphicCard());
-            // board.getChildren().add(card.getGraphicCard());
+        if (board.getChildren().size() == 1) {
+            board.getChildren().add(gridPane);
         }
+    }
 
-        addCardsEvent();
+
+
+    public void removeCard(Card card) {
+        board.getChildren().remove(card.getGraphicCard());
+    }
+
+    public void removeCards(ArrayList<Card> cards) {
+        for (Card card : cards) {
+            removeCard(card);
+        }
     }
 }
