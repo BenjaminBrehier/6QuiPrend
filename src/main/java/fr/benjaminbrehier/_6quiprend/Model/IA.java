@@ -1,11 +1,11 @@
 package fr.benjaminbrehier._6quiprend.Model;
 
-import fr.benjaminbrehier._6quiprend.GameLogic;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ThreadLocalRandom;
+
+import fr.benjaminbrehier._6quiprend.GameLogic;
 
 public class IA extends Character {
 
@@ -88,6 +88,13 @@ public class IA extends Character {
         }
         System.out.println("La meilleure ligne est la ligne " + ligneMaxDeTete);
         return null;
+    }
+
+    public void play(){
+        // int aléatoire entre 0 et ia.getHand().size()
+        int random = (int) (Math.random() * (this.getHand().size() - 1));
+        GameLogic.cartesJouees.put(this, this.getHand().get(random));
+        this.getHand().remove(random);
     }
 }
 

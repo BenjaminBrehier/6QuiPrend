@@ -6,6 +6,7 @@ import fr.benjaminbrehier._6quiprend.Model.IA;
 import fr.benjaminbrehier._6quiprend.Model.Player;
 import fr.benjaminbrehier._6quiprend.Model.Character;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -24,6 +25,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 public class GameLogic extends Application {
     public static ArrayList<Card> pioche = new ArrayList<>();
@@ -32,6 +34,9 @@ public class GameLogic extends Application {
     public static HashMap<Character, Card> cartesJouees = new HashMap<>();
     public static Stage stage;
 
+    public static Semaphore sem = new Semaphore(1);
+
+    private static int nbRealPlayer = 0;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -144,6 +149,7 @@ public class GameLogic extends Application {
         btn.setOnAction(actionEvent -> {
             setup(nbPlayer.getText(), nbIA.getText());
             board.initBoard();
+            jouer();
         });
         vbox.getChildren().add(btn);
 
@@ -168,6 +174,7 @@ public class GameLogic extends Application {
     }
 
     private void setup(String nbPlayer, String nbIA) {
+        nbRealPlayer = Integer.parseInt(nbPlayer);
         for (int i = 1; i <= 104; i++) {
             if (i % 11 == 0) {
                 if (i == 55) {
@@ -266,136 +273,137 @@ public class GameLogic extends Application {
             IA ia = new IA("IA " + (i + 1), characterHand);
             players.add(ia);
         }
-        jouer();
-
-        // Affichage du nombre de points de chaque player (IA + Humains) et calcul du
-        // gagnant
-        int joueurGagnant = -1; // Indice du joueur gagnant (-1 pour l'initialiser)
-        int minimumPoints = Integer.MAX_VALUE; // Initialise avec la plus grande valeur possible
-        for (int p = 0; p < players.size(); p++) {
-            int totalPoints = 0; // Initialise le total de points du joueur
-            for (int gp = 0; gp < players.get(p).getPoints().size(); gp++) {
-                totalPoints += players.get(p).getPoints().get(gp).getBullHead();
-            }
-            if (totalPoints < minimumPoints) {
-                minimumPoints = totalPoints;
-                joueurGagnant = p;
-            }
-        }
-        if (joueurGagnant != -1) {
-            System.out.println("Le joueur " + players.get(joueurGagnant).getName()
-                    + " a le moins de points avec un total de " + minimumPoints + " têtes de taureau");
-        } else {
-            System.out.println("Aucun joueur trouvé");
-        }
     }
 
     public static void jouer() {
-        if (cartesJouees.size() == players.size()) {
-            for (int i = 0; i < 1; i++) {
-                System.out.println("État des 4 lignes :");
-                System.out.println(board.getLignes().get(0).toString());
-                System.out.println(board.getLignes().get(1).toString());
-                System.out.println(board.getLignes().get(2).toString());
-                System.out.println(board.getLignes().get(3).toString());
-
-                for (Character player : players) {
-                    System.out.println("Joueur : " + player + " || Cartes :");
-                    System.out.println(player.getHand().toString());
+        board.reloadPanel(false);
+        if (cartesJouees.size() == nbRealPlayer) {
+            for (Character c : players) {
+                if (c instanceof IA) {
+                    IA ia = (IA) c;
+                    // Attendre 1 seconde
+                    ia.play();
                 }
+            }
 
-                // for (Character player : players) {
-                // // Random card from player hand
-                // int randomCard = (int) (Math.random() * player.getHand().size());
-                // Card card = player.getHand().get(randomCard);
-                // cartesJouees.put(player, card);
-                // }
+            board.reloadPanel(true);
 
-                // Trie des cartes dans la HashMap
-                cartesJouees.forEach((k, v) -> System.out.println(k + "=" + v));
-                System.out.println("After sorting by value");
-                List<Map.Entry<Character, Card>> list = new ArrayList<>(cartesJouees.entrySet());
-                list.sort(Comparator.comparingInt(e -> e.getValue().getNumber()));
-                LinkedHashMap<Character, Card> cartesJoueesTriees = new LinkedHashMap<>();
-                for (Map.Entry<Character, Card> entry : list) {
-                    cartesJoueesTriees.put(entry.getKey(), entry.getValue());
-                }
-                System.out.println("Sorted Map:");
-                cartesJoueesTriees.forEach((k, v) -> System.out.println(k + "=" + v));
+            // Afficher l'état des lignes
+            for (int i = 0; i < board.getLignes().size(); i++) {
+                System.out.println("Ligne " + (i + 1) + " : " + board.getLignes().get(i));
+            }
 
-                if (cartesJoueesTriees.size() > 0) {
-                    for (Map.Entry<Character, Card> testEntry : cartesJoueesTriees.entrySet()) {
-                        ArrayList<Card> ligne = null;
-                        Card card = (Card) testEntry.getValue();
-                        for (int j = 0; j < board.getLignes().size(); j++) {
-                            Card lastCard = board.getLignes().get(j).get(board.getLignes().get(j).size() - 1);
+            // Trie des cartes dans la HashMap
+            // cartesJouees.forEach((k, v) -> System.out.println(k + "=" + v));
+            // System.out.println("After sorting by value");
+            List<Map.Entry<Character, Card>> list = new ArrayList<>(cartesJouees.entrySet());
+            list.sort(Comparator.comparingInt(e -> e.getValue().getNumber()));
+            LinkedHashMap<Character, Card> cartesJoueesTriees = new LinkedHashMap<>();
+            for (Map.Entry<Character, Card> entry : list) {
+                cartesJoueesTriees.put(entry.getKey(), entry.getValue());
+            }
+            // System.out.println("Sorted Map:");
+            // cartesJoueesTriees.forEach((k, v) -> System.out.println(k + "=" + v));
 
-                            System.out.println("Carte : " + card.toString() + " | Dernière carte de la ligne : "
-                                    + lastCard.toString());
-                            if (ligne == null) {
-                                if (card.getNumber() > lastCard.getNumber()) {
-                                    ligne = board.getLignes().get(j);
-                                }
-                            } else {
-                                System.out.println(card.getNumber() > lastCard.getNumber()
-                                        && card.getNumber() - lastCard.getNumber() < card.getNumber()
-                                                - ligne.get(ligne.size() - 1).getNumber());
-                                if (card.getNumber() > lastCard.getNumber()
-                                        && card.getNumber() - lastCard.getNumber() < card.getNumber()
-                                                - ligne.get(ligne.size() - 1).getNumber()) {
-                                    ligne = board.getLignes().get(j);
-                                }
-                            }
+            for (Map.Entry<Character, Card> testEntry : cartesJoueesTriees.entrySet()) {
+                ArrayList<Card> ligne = null;
+                Card card = (Card) testEntry.getValue();
+                Character joueur = (Character) testEntry.getKey();
+
+                for (int j = 0; j < board.getLignes().size(); j++) {
+                    Card lastCard = board.getLignes().get(j).get(board.getLignes().get(j).size() - 1);
+
+                    // System.out.println("Carte : " + card.toString() + " | Dernière carte de la ligne : " + lastCard.toString());
+                    if (ligne == null) {
+                        if (card.getNumber() > lastCard.getNumber()) {
+                            ligne = board.getLignes().get(j);
                         }
-
-                        if (ligne != null) {
-                            System.out.println("La carte " + card.toString() + " est ajoutée à la ligne " + ligne);
-                            Character joueur = (Character) testEntry.getKey();
-                            joueur.getHand().remove(card);
-                            if (ligne.size() == 5) {
-                                System.out.println(
-                                        "La ligne contenant la carte inférieure la plus proche est full, vous ramassez donc la ligne et vous posez votre carte en première position");
-                                joueur.getPoints().addAll(ligne);
-                                ligne.removeAll(ligne);
-                            }
-                            ligne.add(card);
-                        } else {
-                            Alert alert = new Alert(AlertType.CONFIRMATION);
-                            alert.setTitle("Sélection de ligne");
-                            alert.setHeaderText("Veuillez choisir une ligne");
-                            alert.setContentText("Aucune ligne ne peut accueillir cette carte : " + card.toString());
-
-                            ButtonType buttonType1 = new ButtonType("1");
-                            ButtonType buttonType2 = new ButtonType("2");
-                            ButtonType buttonType3 = new ButtonType("3");
-                            ButtonType buttonType4 = new ButtonType("4");
-                            alert.getButtonTypes().setAll(buttonType1, buttonType2, buttonType3, buttonType4);
-
-                            alert.showAndWait().ifPresent(buttonType -> {
-                                int ligneARamasser = 0; 
-                                if (buttonType == buttonType1) {
-                                    ligneARamasser = 1;
-                                } else if (buttonType == buttonType2) {
-                                    ligneARamasser = 2;
-                                } else if (buttonType == buttonType3) {
-                                    ligneARamasser = 3;
-                                } else if (buttonType == buttonType4) {
-                                    ligneARamasser = 4;
-                                }
-                                Character joueur = (Character) testEntry.getKey();
-                                joueur.getHand().remove(card);
-                                joueur.getPoints().addAll(board.getLignes().get(ligneARamasser - 1));
-                                board.getLignes().get(ligneARamasser - 1)
-                                        .removeAll(board.getLignes().get(ligneARamasser - 1));
-                                board.getLignes().get(ligneARamasser - 1).add(card);
-                                System.out.println(
-                                        "Nouvelle ligne : " + board.getLignes().get(ligneARamasser - 1).toString());
-                            });
+                    } else {
+                        if (card.getNumber() > lastCard.getNumber() && card.getNumber() - lastCard.getNumber() < card.getNumber() - ligne.get(ligne.size() - 1).getNumber()) {
+                            ligne = board.getLignes().get(j);
                         }
                     }
                 }
+
+                if (ligne != null) {
+                    System.out.println("La carte " + card.toString() + " est ajoutée à la ligne " + ligne);
+                    if (ligne.size() == 5) {
+                        System.out.println("La ligne contenant la carte inférieure la plus proche est full, vous ramassez donc la ligne et vous posez votre carte en première position");
+                        joueur.getPoints().addAll(ligne);
+                        ligne.clear();
+                    }
+                    ligne.add(card);
+                } else {
+                    System.out.println("Aucune ligne ne peut accueillir la carte " + card.toString() + " !");
+                    if (testEntry.getKey() instanceof IA) {
+                        int min = 0;
+                        for (int i = 0; i < board.getLignes().size(); i++) {
+                            if (board.getLignes().get(i).size() < board.getLignes().get(min).size()) {
+                                min = i;
+                            }
+                        }
+                        joueur.getPoints().addAll(board.getLignes().get(min));
+                        board.removeCards(board.getLignes().get(min));
+                        board.getLignes().get(min).clear();
+                        board.getLignes().get(min).add(card);
+                    } else {
+                        Alert alert = new Alert(AlertType.CONFIRMATION);
+                        alert.setTitle("Sélection de ligne");
+                        alert.setHeaderText("Veuillez choisir une ligne");
+                        alert.setContentText("Aucune ligne ne peut accueillir cette carte : " + card.toString());
+
+                        ButtonType buttonType1 = new ButtonType("1");
+                        ButtonType buttonType2 = new ButtonType("2");
+                        ButtonType buttonType3 = new ButtonType("3");
+                        ButtonType buttonType4 = new ButtonType("4");
+                        alert.getButtonTypes().setAll(buttonType1, buttonType2, buttonType3, buttonType4);
+
+                        alert.showAndWait().ifPresent(buttonType -> {
+                            int ligneARamasser = 0;
+                            if (buttonType == buttonType1) {
+                                ligneARamasser = 1;
+                            } else if (buttonType == buttonType2) {
+                                ligneARamasser = 2;
+                            } else if (buttonType == buttonType3) {
+                                ligneARamasser = 3;
+                            } else if (buttonType == buttonType4) {
+                                ligneARamasser = 4;
+                            }
+
+                            joueur.getPoints().addAll(board.getLignes().get(ligneARamasser - 1));
+                            board.getLignes().get(ligneARamasser - 1).clear();
+                            board.getLignes().get(ligneARamasser - 1).add(card);
+                            System.out.println(
+                                    "Nouvelle ligne : " + board.getLignes().get(ligneARamasser - 1).toString());
+                        });
+                    }
+                }
+                board.reloadPanel(true);
+                board.reloadLignes();
+
+            }
+            cartesJouees.clear();
+            cartesJoueesTriees.clear();
+
+            board.reloadBoard(false);
+
+            if (players.get(0).getHand().size() == 0) {
+                int joueurGagnant = -1; // Indice du joueur gagnant (-1 pour l'initialiser)
+                int minimumPoints = Integer.MAX_VALUE; // Initialise avec la plus grande valeur possible
+                for (int p = 0; p < players.size(); p++) {
+                    int totalPoints = 0; // Initialise le total de points du joueur
+                    for (int gp = 0; gp < players.get(p).getPoints().size(); gp++) {
+                        totalPoints += players.get(p).getPoints().get(gp).getBullHead();
+                    }
+                    if (totalPoints < minimumPoints) {
+                        minimumPoints = totalPoints;
+                        joueurGagnant = p;
+                    }
+                }
+                System.out.println("Le joueur " + players.get(joueurGagnant).getName() + " a le moins de points avec un total de " + minimumPoints + " têtes de taureau");
+            } else {
                 board.addCardsEvent();
-                board.reloadBoard();
+                board.reloadBoard(false);
             }
         }
     }
