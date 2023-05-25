@@ -6,6 +6,7 @@ import fr.benjaminbrehier._6quiprend.Model.IA;
 import fr.benjaminbrehier._6quiprend.Model.Player;
 import fr.benjaminbrehier._6quiprend.Model.Character;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -24,6 +25,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 public class GameLogic extends Application {
     public static ArrayList<Card> pioche = new ArrayList<>();
@@ -31,6 +33,8 @@ public class GameLogic extends Application {
     static Board board = new Board(new ArrayList<ArrayList<Card>>());
     public static HashMap<Character, Card> cartesJouees = new HashMap<>();
     public static Stage stage;
+
+    public static Semaphore sem = new Semaphore(1);
 
     private static int nbRealPlayer = 0;
 
@@ -145,6 +149,7 @@ public class GameLogic extends Application {
         btn.setOnAction(actionEvent -> {
             setup(nbPlayer.getText(), nbIA.getText());
             board.initBoard();
+            jouer();
         });
         vbox.getChildren().add(btn);
 
@@ -268,7 +273,6 @@ public class GameLogic extends Application {
             IA ia = new IA("IA " + (i + 1), characterHand);
             players.add(ia);
         }
-        jouer();
     }
 
     public static void jouer() {
@@ -277,6 +281,7 @@ public class GameLogic extends Application {
             for (Character c : players) {
                 if (c instanceof IA) {
                     IA ia = (IA) c;
+                    // Attendre 1 seconde
                     ia.play();
                 }
             }
@@ -373,6 +378,9 @@ public class GameLogic extends Application {
                         });
                     }
                 }
+                board.reloadPanel(true);
+                board.reloadLignes();
+
             }
             cartesJouees.clear();
             cartesJoueesTriees.clear();
