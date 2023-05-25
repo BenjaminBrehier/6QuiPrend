@@ -28,9 +28,10 @@ import java.util.*;
 public class GameLogic extends Application {
     public static ArrayList<Card> pioche = new ArrayList<>();
     public static ArrayList<Character> players = new ArrayList<>();
-    static Board board = new Board(new ArrayList<ArrayList<Card>>());
+    public static Board board = new Board(new ArrayList<ArrayList<Card>>());
     public static HashMap<Character, Card> cartesJouees = new HashMap<>();
     public static Stage stage;
+
 
     @Override
     public void start(Stage stage) throws IOException {

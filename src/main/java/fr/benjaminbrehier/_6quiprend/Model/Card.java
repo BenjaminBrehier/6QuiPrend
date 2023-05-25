@@ -296,5 +296,4 @@ public class Card {
                 ", bullHead=" + bullHead +
                 '}';
     }
-
 }
