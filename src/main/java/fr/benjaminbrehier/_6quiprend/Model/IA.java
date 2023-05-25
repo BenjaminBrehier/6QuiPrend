@@ -13,16 +13,16 @@ public class IA extends Character {
         super (name, hand);
     }
 
-    public Card algoIA(){
+    public Card strategie1(){
         System.out.println("test");
 
         //Peu importe le nombre de joueurs !!!!
         //Check si une ligne a 4 cartes et si la dernière carte de cette ligne a un nombre très
         //proche (1 de différence) du nombre d'une carte dans la main de l'IA (dans ce cas, la jouer)
-        for (int c=1; c<=GameLogic.board.getLignes().size(); c++){
-            if (GameLogic.board.getLignes().get(c).size() == 4){
-                for (int d=1; d<=this.getHand().size(); d++){
-                    if (this.getHand().get(d).getNumber() - GameLogic.board.getLignes().get(c).get(4).getNumber() == 1){
+        for (int c=0; c<GameLogic.board.getLignes().size(); c++){
+            if (GameLogic.board.getLignes().get(c).size() <= 4){
+                for (int d=0; d<this.getHand().size(); d++){
+                    if (this.getHand().get(d).getNumber() - GameLogic.board.getLignes().get(c).get(GameLogic.board.getLignes().get(c).size()-1).getNumber() == 1){
                         return this.getHand().get(d);
                     }
                 }
@@ -46,14 +46,14 @@ public class IA extends Character {
                 }
             }
             //Check si une ligne a 3 cartes
-            for (int c=1; c<=GameLogic.board.getLignes().size(); c++){
+            for (int c=0; c<GameLogic.board.getLignes().size(); c++){
                 if (GameLogic.board.getLignes().get(c).size() == 3){
                     //Check si l'IA a une carte qui a une valeur de +3 par rapport à la dernière carte de la ligne
                     for (int d=0; d<this.getHand().size(); d++) {
-                        if (this.getHand().get(d).getNumber() - GameLogic.board.getLignes().get(c).get(3).getNumber() == 3) {
+                        if (this.getHand().get(d).getNumber() - GameLogic.board.getLignes().get(c).get(GameLogic.board.getLignes().get(c).size()-1).getNumber() == 3) {
                             //Initialise les valeurs cibles qui correspondent à la valeur de la dernière carte +1 et +2
-                            int targetValue1 = GameLogic.board.getLignes().get(c).get(3).getNumber() + 1;
-                            int targetValue2 = GameLogic.board.getLignes().get(c).get(3).getNumber() + +2;
+                            int targetValue1 = GameLogic.board.getLignes().get(c).get(GameLogic.board.getLignes().get(c).size()-1).getNumber() + 1;
+                            int targetValue2 = GameLogic.board.getLignes().get(c).get(GameLogic.board.getLignes().get(c).size()-1).getNumber() + +2;
                             for (Card cartesDansListeGlobale : listeCartesDansGetPoints){
                                 if (cartesDansListeGlobale.getNumber() == targetValue1 || cartesDansListeGlobale.getNumber() == targetValue2){
                                     //Alors on ajoute la carte de la main de l'IA dans la liste des cartes jouables,
@@ -69,8 +69,8 @@ public class IA extends Character {
             }
         }
 
-
-        //A laisser ici pour l'instant, peut petre util après
+        /*
+        //A laisser ici pour l'instant, peut petre utile après
         //Check de la ligne qui a le plus de têtes
         int ligneMaxDeTete = -1;
         int maxValeur = Integer.MIN_VALUE;
@@ -88,13 +88,17 @@ public class IA extends Character {
         }
         System.out.println("La meilleure ligne est la ligne " + ligneMaxDeTete);
         return null;
+        */
+
+        int random = (int) (Math.random() * (this.getHand().size() - 1));
+        return this.getHand().get(random);
     }
 
     public void play(){
         // int aléatoire entre 0 et ia.getHand().size()
-        int random = (int) (Math.random() * (this.getHand().size() - 1));
-        GameLogic.cartesJouees.put(this, this.getHand().get(random));
-        this.getHand().remove(random);
+        Card carte = strategie1();
+        GameLogic.cartesJouees.put(this, carte);
+        this.getHand().remove(carte);
     }
 }
 
