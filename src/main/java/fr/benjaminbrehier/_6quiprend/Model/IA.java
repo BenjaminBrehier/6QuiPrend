@@ -14,7 +14,6 @@ public class IA extends Character {
     }
 
     public Card strategie1(){
-        System.out.println("test");
 
         ArrayList<Card> listeCartesDansGetPoints = new ArrayList<>();
         //Ajoute dans une seule et même liste toutes les cartes des listes GetPoints de tous les joueurs, y compris les IA
@@ -24,33 +23,46 @@ public class IA extends Character {
             }
         }
 
+
+        //AU SECOURS C'EST TROP COMPLEXE
+        //50 sur le board, 60 dans la main = écart de 10, on check si 51, 52, 53, 54, 56, 57, 58 et 59 ont été prises / posées
+        for (int c=0; c<GameLogic.board.getLignes().size(); c++){
+            int ecart = 0;
+            for (int d=0; d<GameLogic.board.getLignes().get(c).size(); d++) {
+                for (int m=0; m<this.getHand().size(); m++){
+                    if (this.getHand().get(m).getNumber() > GameLogic.board.getLignes().get(c).get(d).getNumber()){
+                        ecart = GameLogic.board.getLignes().get(c).get(d).getNumber() - this.getHand().get(m).getNumber() - 1;
+                        int test = 0;
+                        //Pour toutes les cartes dans listecartesDansGetPoints
+                        for (Card carteDansGetPoints : listeCartesDansGetPoints){
+                            for (int e=1; e<=ecart; e++){
+                                //Si le numéro de la carte dans listecartesDansGetPoints = la d 0ernière carte
+                                //de la ligne + l'écart actuel
+                                if(carteDansGetPoints.getNumber() == GameLogic.board.getLignes().get(c).get(d).getNumber() + e){
+                                    test ++;
+                                }
+                            }
+                        }
+                        if (test == ecart){
+                            System.out.println(" !!!!!!!!!!!!!!!!!!!!!!!! Test = " + test + " | ecart = " + ecart);
+                            return this.getHand().get(m);
+                        }
+                    }
+                }
+            }
+        }
+
+
         //Peu importe le nombre de joueurs !!!!
         //Check si une ligne a 4 cartes et si la dernière carte de cette ligne a un nombre très
         //proche (1 de différence) du nombre d'une carte dans la main de l'IA (dans ce cas, la jouer)
         for (int c=0; c<GameLogic.board.getLignes().size(); c++){
             if (GameLogic.board.getLignes().get(c).size() <= 4){
-                int ecart = 0;
                 for (int d=0; d<this.getHand().size(); d++) {
                     //Check si les deux cartes ont 1 de différence
                     if (this.getHand().get(d).getNumber() - GameLogic.board.getLignes().get(c).get(GameLogic.board.getLignes().get(c).size() - 1).getNumber() == 1) {
                         return this.getHand().get(d);
                     }
-                    /* AU SECOURS C'EST TROP COMPLEXE
-                    //50 sur le board, 60 dans la main = écart de 10, on check si 51, 52, 53, 54, 56, 57, 58 et 59 ont été prises / posées
-                    ecart = GameLogic.board.getLignes().get(c).get(d).getNumber() - this.getHand().get(d).getNumber();
-                    for (int e=0; e<ecart; e++){
-                        //Pour toutes les cartes dans listecartesDansGetPoints
-                        for (Card carte : listeCartesDansGetPoints){
-                            //Si le numéro de la carte dans listecartesDansGetPoints = la dernière carte
-                            //de la ligne + l'écart actuel
-                            if(carte.getNumber() == GameLogic.board.getLignes().get(c).get(d).getNumber() + ecart){
-
-                                if(this.getHand().get(d).getNumber() - carte.getNumber() == ecart){
-
-                                }
-                            }
-                        }
-                    }*/
                 }
             }
         }
@@ -62,7 +74,7 @@ public class IA extends Character {
         //ont déjà été jouées. Si c'est le cas, on est bon.
         //Par exemple, il y la carte 50 sur le board, ma carte la + proche est 53
         //Check si les cartes 51 / 52 ont été jouées (au moins une), car puisqu'il y a 3 cartes sur la ligne, l'IA est safe dans ce cas
-        if (GameLogic.players.size() <= 3){
+        if (GameLogic.players.size() <= 1){
             ArrayList<Card> cartesDifferenceInferieureA3Jouables = new ArrayList<>();
             //Check si une ligne a 3 cartes
             for (int c=0; c<GameLogic.board.getLignes().size(); c++){
@@ -87,6 +99,10 @@ public class IA extends Character {
                 }
             }
         }
+
+
+
+
 
 
         //Calcul si le nombre de têtes de chaque ligne est inférieur ou égal à 2
