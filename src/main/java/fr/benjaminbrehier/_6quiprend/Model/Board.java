@@ -1,19 +1,19 @@
 package fr.benjaminbrehier._6quiprend.Model;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 import fr.benjaminbrehier._6quiprend.GameLogic;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -137,8 +137,46 @@ public class Board {
         for (int i = 0; i < lignes.size(); i++) {
             HBox vBox2 = new HBox();
             vBox2.setSpacing(10);
-            for (int j = 0; j < lignes.get(i).size(); j++) {
-                vBox2.getChildren().add(lignes.get(i).get(j).getGraphicCard());
+            for (int j = 0; j < 6; j++) {
+                if (lignes.get(i).size() > j && lignes.get(i).get(j) != null) {
+                    vBox2.getChildren().add(lignes.get(i).get(j).getGraphicCard());
+                } else {
+                    Pane pane = new Pane();
+                    Rectangle emplacement = new Rectangle();
+                    emplacement.setFill(Color.TRANSPARENT);
+                    emplacement.setWidth(100);
+                    emplacement.setHeight(150);
+                    emplacement.setStroke(Color.BLACK);
+                    emplacement.setOpacity(0.5);
+                    emplacement.setStrokeWidth(4);
+                    emplacement.setStrokeLineCap(StrokeLineCap.ROUND);
+                    emplacement.setStrokeLineJoin(StrokeLineJoin.ROUND);
+                    emplacement.setStrokeDashOffset(0);
+                    emplacement.setArcWidth(20);
+                    emplacement.setArcHeight(20);
+                    emplacement.setRotate(0);
+                    emplacement.setVisible(true);
+                    emplacement.toFront();
+
+                    pane.getChildren().add(emplacement);
+
+                    if (j == 5) {
+                        ImageView algo = new ImageView();
+                        algo.setImage(new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/taurauxRouge.png").toURI().toString()));
+                        algo.setFitWidth(90);
+                        algo.setFitHeight(80);
+                        algo.setLayoutX(5);
+                        algo.setLayoutY(35);
+                        algo.setVisible(true);
+                        algo.toFront();
+    
+                        pane.getChildren().add(algo);
+                    }
+
+                    pane.setPrefWidth(100);
+                    pane.setPrefHeight(150);
+                    vBox2.getChildren().add(pane);
+                }
             }
             lignesVBox.getChildren().add(vBox2);
         }
@@ -186,6 +224,7 @@ public class Board {
             rectangle.setWidth(100);
             rectangle.setHeight(150);
             rectangle.setStroke(Color.BLACK);
+            rectangle.setOpacity(0.5);
             rectangle.setStrokeWidth(4);
             rectangle.setStrokeLineCap(StrokeLineCap.ROUND);
             rectangle.setStrokeLineJoin(StrokeLineJoin.ROUND);
@@ -234,6 +273,8 @@ public class Board {
         addCardsEvent();
         Scene scene = new Scene(board, 1440, 855);
         GameLogic.stage.setScene(scene);
+
+        reloadLignes();
     }
 
     public void reloadBoard(boolean wait) {
@@ -279,8 +320,46 @@ public class Board {
         for (int i = 0; i < lignes.size(); i++) {
             HBox vBox2 = new HBox();
             vBox2.setSpacing(10);
-            for (int j = 0; j < lignes.get(i).size(); j++) {
-                vBox2.getChildren().add(lignes.get(i).get(j).getGraphicCard());
+            for (int j = 0; j < 6; j++) {
+                if (lignes.get(i).size() > j && lignes.get(i).get(j) != null) {
+                    vBox2.getChildren().add(lignes.get(i).get(j).getGraphicCard());
+                } else {
+                    Pane pane = new Pane();
+                    Rectangle emplacement = new Rectangle();
+                    emplacement.setFill(Color.TRANSPARENT);
+                    emplacement.setWidth(100);
+                    emplacement.setHeight(150);
+                    emplacement.setStroke(Color.BLACK);
+                    emplacement.setOpacity(0.5);
+                    emplacement.setStrokeWidth(4);
+                    emplacement.setStrokeLineCap(StrokeLineCap.ROUND);
+                    emplacement.setStrokeLineJoin(StrokeLineJoin.ROUND);
+                    emplacement.setStrokeDashOffset(0);
+                    emplacement.setArcWidth(20);
+                    emplacement.setArcHeight(20);
+                    emplacement.setRotate(0);
+                    emplacement.setVisible(true);
+                    emplacement.toFront();
+
+                    pane.getChildren().add(emplacement);
+
+                    if (j == 5) {
+                        ImageView algo = new ImageView();
+                        algo.setImage(new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/taurauxRouge.png").toURI().toString()));
+                        algo.setFitWidth(90);
+                        algo.setFitHeight(80);
+                        algo.setLayoutX(5);
+                        algo.setLayoutY(35);
+                        algo.setVisible(true);
+                        algo.toFront();
+    
+                        pane.getChildren().add(algo);
+                    }
+
+                    pane.setPrefWidth(100);
+                    pane.setPrefHeight(150);
+                    vBox2.getChildren().add(pane);
+                }
             }
             lignesVBox.getChildren().add(vBox2);
         }
@@ -327,6 +406,7 @@ public class Board {
             rectangle.setFill(Color.TRANSPARENT);
             rectangle.setWidth(100);
             rectangle.setHeight(150);
+            rectangle.setOpacity(0.5);
             rectangle.setStroke(Color.BLACK);
             rectangle.setStrokeWidth(4);
             rectangle.setStrokeLineCap(StrokeLineCap.ROUND);
