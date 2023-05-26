@@ -1,9 +1,15 @@
 package fr.benjaminbrehier._6quiprend.Model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import fr.benjaminbrehier._6quiprend.GameLogic;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,11 +23,15 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 public class Board {
     Pane board = new Pane();
     public static ArrayList<Card> choosenArray = new ArrayList<Card>();
     private ArrayList<ArrayList<Card>> lignes;
+    private Scene scene;
 
     public Board(ArrayList<ArrayList<Card>> lignes) {
         this.lignes = lignes;
@@ -357,5 +367,83 @@ public class Board {
         for (Card card : cards) {
             removeCard(card);
         }
+    }
+
+    public void finJeu(Character gagnant, int points) {
+        Rectangle rect = new Rectangle(0, 0, 1440, 855);
+        rect.setFill(Color.BLACK);
+        rect.setOpacity(0.5);
+        
+        Text text = new Text("Le joueur " + gagnant.getName() + " a gagné \n avec un total de " + points + " têtes de taureau");
+        text.setFont(Font.font("Verdana", FontWeight.BOLD, 50));
+        text.setFill(Color.WHITE);
+        text.setTextAlignment(TextAlignment.CENTER);
+        text.setX(1440 / 2 - text.getLayoutBounds().getWidth() / 2);
+        text.setY(555 / 2 - text.getLayoutBounds().getHeight() / 2);
+
+        // Déterminer la classement des joueurs et les afficher dans l'ordre avec leur score
+        HashMap<Character, Integer> listeJoueurScore = new HashMap<>();
+        for (Character character : GameLogic.players) {
+            int score = 0;
+            for (Card card : character.getPoints()) {
+                score += card.getBullHead();
+            }
+            listeJoueurScore.put(character, score);
+        }
+
+        List<Map.Entry<Character, Integer>> list = new ArrayList<>(listeJoueurScore.entrySet());
+        list.sort(Comparator.comparingInt(e -> e.getValue()));
+        LinkedHashMap<Character, Integer> classement = new LinkedHashMap<>();
+        for (Map.Entry<Character, Integer> entry : list) {
+            classement.put(entry.getKey(), entry.getValue());
+        }
+
+        GridPane graphicClassement = new GridPane();
+        graphicClassement.setHgap(10);
+        graphicClassement.setVgap(10);
+        graphicClassement.setAlignment(Pos.CENTER);
+        graphicClassement.setPadding(new Insets(10, 0, 0, 10));
+        
+        int cpt = 0;
+        for (Map.Entry<Character, Integer> entry : classement.entrySet()) {
+            Text position = new Text(cpt + 1 + ".");
+            position.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
+            Color color = Color.WHITE;
+            if (cpt == 0) {
+                color = Color.GOLD;
+            } else if (cpt == 1) {
+                color = Color.SILVER;
+            } else if (cpt == 2) {
+                color = Color.BURLYWOOD;
+            }
+            position.setFill(color);
+            position.setTextAlignment(TextAlignment.CENTER);
+            graphicClassement.add(position, 0, cpt);
+
+            Text name = new Text(entry.getKey().getName());
+            name.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
+            name.setFill(color);
+            name.setTextAlignment(TextAlignment.CENTER);
+            graphicClassement.add(name, 1, cpt);
+
+            Text score = new Text(" : " + entry.getValue().toString());
+            score.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
+            score.setFill(color);
+            score.setTextAlignment(TextAlignment.CENTER);
+            graphicClassement.add(score, 2, cpt++);
+        }
+
+        graphicClassement.setLayoutX(550);
+        graphicClassement.setLayoutY(500 / 2 - graphicClassement.getLayoutBounds().getHeight() / 2 + 50);
+        board.getChildren().addAll(rect, text, graphicClassement);
+
+        //     Text text2 = new Text(character.getName() + " : " + classement.get(character));
+        //     text2.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
+        //     text2.setFill(Color.WHITE);
+        //     text2.setTextAlignment(TextAlignment.CENTER);
+        //     text2.setX(1500 / 2 - text2.getLayoutBounds().getWidth() / 2);
+        //     text2.setY(650 / 2 - text2.getLayoutBounds().getHeight() / 2 + 100 + cpt * 50);
+        //     cpt++;
+        //     board.getChildren().add(text2);        
     }
 }

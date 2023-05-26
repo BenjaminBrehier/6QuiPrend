@@ -6,7 +6,6 @@ import fr.benjaminbrehier._6quiprend.Model.IA;
 import fr.benjaminbrehier._6quiprend.Model.Player;
 import fr.benjaminbrehier._6quiprend.Model.Character;
 import javafx.application.Application;
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -338,7 +337,7 @@ public class GameLogic extends Application {
                     if (testEntry.getKey() instanceof IA) {
                         int min = 0;
                         for (int i = 0; i < board.getLignes().size(); i++) {
-                            if (board.getLignes().get(i).size() < board.getLignes().get(min).size()) {
+                            if (nbBullLigne(board.getLignes().get(i)) < nbBullLigne(board.getLignes().get(min))) {
                                 min = i;
                             }
                         }
@@ -401,11 +400,20 @@ public class GameLogic extends Application {
                     }
                 }
                 System.out.println("Le joueur " + players.get(joueurGagnant).getName() + " a le moins de points avec un total de " + minimumPoints + " têtes de taureau");
+                board.finJeu(players.get(joueurGagnant), minimumPoints);
             } else {
                 board.addCardsEvent();
                 board.reloadBoard(false);
             }
         }
+    }
+
+    private static int nbBullLigne(ArrayList<Card> ligne) {
+        int nbBull = 0;
+        for (Card c : ligne) {
+            nbBull += c.getBullHead();
+        }
+        return nbBull;
     }
 
     public static void main(String[] args) {
