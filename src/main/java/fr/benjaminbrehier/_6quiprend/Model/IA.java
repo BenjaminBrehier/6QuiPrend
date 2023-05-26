@@ -1,8 +1,6 @@
 package fr.benjaminbrehier._6quiprend.Model;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ThreadLocalRandom;
 
 import fr.benjaminbrehier._6quiprend.GameLogic;
@@ -14,8 +12,6 @@ public class IA extends Character {
     }
 
     public Card strategie1(){
-        System.out.println("test");
-
         ArrayList<Card> listeCartesDansGetPoints = new ArrayList<>();
         //Ajoute dans une seule et même liste toutes les cartes des listes GetPoints de tous les joueurs, y compris les IA
         for (int i=0; i<GameLogic.players.size(); i++){
