@@ -417,7 +417,7 @@ public class GameLogic extends Application {
         }
     }
 
-    private static int nbBullLigne(ArrayList<Card> ligne) {
+    public static int nbBullLigne(ArrayList<Card> ligne) {
         int nbBull = 0;
         for (Card c : ligne) {
             nbBull += c.getBullHead();
