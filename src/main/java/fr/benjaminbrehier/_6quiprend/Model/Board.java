@@ -12,6 +12,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -32,6 +33,7 @@ public class Board {
     public static ArrayList<Card> choosenArray = new ArrayList<Card>();
     private ArrayList<ArrayList<Card>> lignes;
     private Scene scene;
+    private ArrayList<String> actions = new ArrayList<String>();
 
     public Board(ArrayList<ArrayList<Card>> lignes) {
         this.lignes = lignes;
@@ -193,7 +195,7 @@ public class Board {
 
         lignesVBox.setPadding(new Insets(10, 0, 0, 10));
         board.getChildren().add(lignesVBox);
-        board.setStyle("-fx-background-size: 1440 855; -fx-background-image: url('https://img.freepik.com/vecteurs-libre/table-manger-bois-vue-dessus-vecteur-realiste_107791-13011.jpg?w=1380&t=st=1683874217~exp=1683874817~hmac=4a55c4c2786ec3d84229b244ac8af4ad194f73d72b5687727a81fb6b482a77e5')");
+        board.setStyle("-fx-background-size: 1440 950; -fx-background-image: url('https://img.freepik.com/vecteurs-libre/table-manger-bois-vue-dessus-vecteur-realiste_107791-13011.jpg?w=1380&t=st=1683874217~exp=1683874817~hmac=4a55c4c2786ec3d84229b244ac8af4ad194f73d72b5687727a81fb6b482a77e5')");
 
         GridPane gridPane = new GridPane();
         gridPane.getChildren().clear();
@@ -247,6 +249,30 @@ public class Board {
 
         board.getChildren().add(gridPane);
 
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setPrefWidth(600);
+        scrollPane.setPrefHeight(100);
+        scrollPane.setLayoutX(800);
+        scrollPane.setLayoutY(470);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setStyle("-fx-background-color: transparent;");
+
+        VBox vBox = new VBox();
+        vBox.setSpacing(5);
+        vBox.setAlignment(Pos.CENTER);
+
+        for (String action : actions) {
+            Text text = new Text(action);
+            text.setFont(new Font("Arial", 20));
+            text.setFill(Color.BLACK);
+            vBox.getChildren().add(text);
+        }
+
+        scrollPane.setContent(vBox);
+        scrollPane.setVvalue(1);
+        board.getChildren().add(scrollPane);
+
         Pane points = new Pane();
         points.setLayoutX(1300);
         points.setLayoutY(670);
@@ -273,16 +299,16 @@ public class Board {
         addCardsEvent();
         Scene scene = new Scene(board, 1440, 855);
         GameLogic.stage.setScene(scene);
-
-        reloadLignes();
     }
 
     public void reloadBoard(boolean wait) {
         reloadLignes();
 
-        board.setStyle("-fx-background-size: 1440 855; -fx-background-image: url('https://img.freepik.com/vecteurs-libre/table-manger-bois-vue-dessus-vecteur-realiste_107791-13011.jpg?w=1380&t=st=1683874217~exp=1683874817~hmac=4a55c4c2786ec3d84229b244ac8af4ad194f73d72b5687727a81fb6b482a77e5')");
+        board.setStyle("-fx-background-size: 1440 950; -fx-background-image: url('https://img.freepik.com/vecteurs-libre/table-manger-bois-vue-dessus-vecteur-realiste_107791-13011.jpg?w=1380&t=st=1683874217~exp=1683874817~hmac=4a55c4c2786ec3d84229b244ac8af4ad194f73d72b5687727a81fb6b482a77e5')");
 
         reloadPanel(false);
+
+        reloadActions();
 
         Pane points = new Pane();
         points.setLayoutX(1300);
@@ -437,6 +463,31 @@ public class Board {
         }
     }
 
+    public void reloadActions() {
+        ScrollPane scrollPane = (ScrollPane) board.getChildren().get(2);
+        scrollPane.setPrefWidth(600);
+        scrollPane.setPrefHeight(150);
+        scrollPane.setLayoutX(800);
+        scrollPane.setLayoutY(470);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+        VBox vBox = new VBox();
+        vBox.setSpacing(5);
+        vBox.setAlignment(Pos.TOP_LEFT);
+        vBox.setPadding(new Insets(10, 0, 10, 10));
+
+        for (String action : actions) {
+            Text text = new Text(action);
+            text.setFont(new Font("Arial", 20));
+            text.setFill(Color.BLACK);
+            vBox.getChildren().add(text);
+        }
+
+        scrollPane.setContent(vBox);
+        scrollPane.setVvalue(1);
+    }
+
 
 
     public void removeCard(Card card) {
@@ -525,5 +576,9 @@ public class Board {
         //     text2.setY(650 / 2 - text2.getLayoutBounds().getHeight() / 2 + 100 + cpt * 50);
         //     cpt++;
         //     board.getChildren().add(text2);        
+    }
+
+    public void addAction(String action) {
+        actions.add(action);
     }
 }

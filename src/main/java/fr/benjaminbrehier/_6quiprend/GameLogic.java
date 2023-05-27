@@ -285,6 +285,8 @@ public class GameLogic extends Application {
                 }
             }
 
+            board.addAction("====== Tour " + (10 - players.get(0).getHand().size()) + " ======");
+
             board.reloadPanel(true);
 
             // Afficher l'état des lignes
@@ -325,14 +327,17 @@ public class GameLogic extends Application {
                 }
 
                 if (ligne != null) {
+                    board.addAction(joueur.getName() + " pose la carte " + card.getNumber() + " sur la ligne " + (board.getLignes().indexOf(ligne) + 1) + ".");
                     System.out.println("La carte " + card.toString() + " est ajoutée à la ligne " + ligne);
                     if (ligne.size() == 5) {
+                        board.addAction("-> La ligne " + (board.getLignes().indexOf(ligne) + 1) + " est pleine, " + joueur.getName() + " ramasse la ligne, "+ nbBullLigne(ligne) +" têtes.");
                         System.out.println("La ligne contenant la carte inférieure la plus proche est full, vous ramassez donc la ligne et vous posez votre carte en première position");
                         joueur.getPoints().addAll(ligne);
                         ligne.clear();
                     }
                     ligne.add(card);
                 } else {
+                    board.addAction(joueur.getName() + " ne peut pas poser la carte " + card.getNumber() + ".");
                     System.out.println("Aucune ligne ne peut accueillir la carte " + card.toString() + " !");
                     if (testEntry.getKey() instanceof IA) {
                         int min = 0;
@@ -342,6 +347,7 @@ public class GameLogic extends Application {
                             }
                         }
                         joueur.getPoints().addAll(board.getLignes().get(min));
+                        board.addAction("-> " + joueur.getName() + " choisi de ramasser la ligne " + (min + 1) + ", " + nbBullLigne(board.getLignes().get(min)) + " têtes.");
                         board.removeCards(board.getLignes().get(min));
                         board.getLignes().get(min).clear();
                         board.getLignes().get(min).add(card);
@@ -374,6 +380,7 @@ public class GameLogic extends Application {
                             board.getLignes().get(ligneARamasser - 1).add(card);
                             System.out.println(
                                     "Nouvelle ligne : " + board.getLignes().get(ligneARamasser - 1).toString());
+                            board.addAction(joueur.getName() + " ramasse la ligne " + (ligneARamasser) + ".");
                         });
                     }
                 }
@@ -383,6 +390,8 @@ public class GameLogic extends Application {
             }
             cartesJouees.clear();
             cartesJoueesTriees.clear();
+
+            board.addAction("");
 
             board.reloadBoard(false);
 
