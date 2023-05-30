@@ -5,6 +5,7 @@ module fr.benjaminbrehier._6quiprend {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
+    requires javafx.media;
 
     opens fr.benjaminbrehier._6quiprend to javafx.fxml;
     exports fr.benjaminbrehier._6quiprend;

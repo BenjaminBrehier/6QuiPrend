@@ -20,9 +20,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -39,6 +43,7 @@ public class GameLogic extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        musicSelection();
         this.stage = stage;
         HBox hbox = new HBox();
         VBox vbox = new VBox();
@@ -147,6 +152,7 @@ public class GameLogic extends Application {
         Button btn = new Button("Jouer");
         btn.setOnAction(actionEvent -> {
             setup(nbPlayer.getText(), nbIA.getText());
+            mediaPlayerSelection.stop();
             board.initBoard();
             jouer();
         });
@@ -171,6 +177,34 @@ public class GameLogic extends Application {
                 + (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText())) + " sur 10 max");
 
     }
+
+
+    MediaPlayer mediaPlayerSelection;
+    public void musicSelection(){
+        String sound = "src/main/resources/fr/benjaminbrehier/_6quiprend/snd/mario-kart-8-deluxe-music-extended.mp3";
+        Media s = new Media(Paths.get(sound).toUri().toString());
+        mediaPlayerSelection = new MediaPlayer(s);
+        mediaPlayerSelection.play();
+    }
+
+    /*
+     mediaPlayerSelection.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+        if (newValue.equals(media.getDuration())) {
+            mediaPlayerSelection.seek(Duration.ZERO); // Revenir au début du média
+            mediaPlayerSelection.play(); // Rejouer la musique
+        }
+    });
+    */
+
+    // Obligé de mettre tout en static si je veux appeler la méthode dans la méthode "jouer()"
+    static MediaPlayer mediaPlayerJeu;
+    public static void musicJeu(){
+        String sound = "src/main/resources/fr/benjaminbrehier/_6quiprend/snd/nintendo-casino-music-compilation.mp3";
+        Media j = new Media(Paths.get(sound).toUri().toString());
+        mediaPlayerJeu = new MediaPlayer(j);
+        mediaPlayerJeu.play();
+    }
+
 
     private void setup(String nbPlayer, String nbIA) {
         nbRealPlayer = Integer.parseInt(nbPlayer);
@@ -275,6 +309,7 @@ public class GameLogic extends Application {
     }
 
     public static void jouer() {
+        musicJeu();
         board.reloadPanel(false);
         if (cartesJouees.size() == nbRealPlayer) {
             for (Character c : players) {
