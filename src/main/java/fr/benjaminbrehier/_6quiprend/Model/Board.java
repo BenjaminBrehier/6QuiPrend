@@ -86,6 +86,7 @@ public class Board {
                 ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
             });
             card.getGraphicCard().setOnMouseClicked(mouseEvent -> {
+                GameLogic.musicFlipCard();
                 removeCardsEvent();
                 System.out.println("Carte jouée : " + card);
                 GameLogic.players.get(0).getHand().remove(card);

@@ -17,8 +17,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -26,6 +27,7 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -48,6 +50,20 @@ public class GameLogic extends Application {
         HBox hbox = new HBox();
         VBox vbox = new VBox();
 
+        Label titre = new Label("Le 6quiPrend!");
+        //Font HPFont = Font.loadFont("src/main/resources/fr/benjaminbrehier/_6quiprend/fonts/HPFont.ttf", 40);
+        //titre.setFont(HPFont);
+        titre.setStyle("-fx-font-size: 60px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "red" + "; -fx-font-weight: bold;");
+        //InputStream fontStream = new InputStream(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/font/mario_kart_f2.ttf").toURI().toString());
+        //Font fontTitre = Font.loadFont(fontStream, 20);
+        //titre.setFont(fontTitre);
+        vbox.getChildren().add(titre);
+
+        Image backgroundImage = new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/taureaux-transformed.jpeg").toURI().toString());
+        BackgroundImage bgImg = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1920,1080, true, true, true, true));
+        Background bg = new Background(bgImg);
+        hbox.setBackground(bg);
+
         ImageView logo = new ImageView(new Image(
                 new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/logo.jpeg").toURI().toString()));
         logo.setFitWidth(250);
@@ -56,6 +72,7 @@ public class GameLogic extends Application {
         vbox.getChildren().add(logo);
 
         Label nbJoueurLbl = new Label("Combien de joueurs? : 6");
+        nbJoueurLbl.setStyle("-fx-font-size: 20px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "red" + "; -fx-font-weight: bold;");
         vbox.getChildren().add(nbJoueurLbl);
 
         HBox nombreCharacterBox = new HBox();
@@ -93,6 +110,7 @@ public class GameLogic extends Application {
 
         btnMoins.setOnAction(actionEvent -> {
             if (Integer.parseInt(nbPlayer.getText()) > 0) {
+                musicSelectionNbJoueursBoup();
                 nbPlayer.setText(String.valueOf(Integer.parseInt(nbPlayer.getText()) - 1));
                 nbJoueurLbl.setText("Combien de joueurs ? : "
                         + (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText())) + " sur 10 max");
@@ -101,6 +119,7 @@ public class GameLogic extends Application {
 
         btnPlus.setOnAction(actionEvent -> {
             if (Integer.parseInt(nbPlayer.getText()) + Integer.parseInt(nbIA.getText()) < 10) {
+                musicSelectionNbJoueursBip();
                 nbPlayer.setText(String.valueOf(Integer.parseInt(nbPlayer.getText()) + 1));
                 nbJoueurLbl.setText("Combien de joueurs ? : "
                         + (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText())) + " sur 10 max");
@@ -109,6 +128,7 @@ public class GameLogic extends Application {
 
         btnMoinsIA.setOnAction(actionEvent -> {
             if (Integer.parseInt(nbIA.getText()) > 0) {
+                musicSelectionNbJoueursBoup();
                 nbIA.setText(String.valueOf(Integer.parseInt(nbIA.getText()) - 1));
                 nbJoueurLbl.setText("Combien de joueurs ? : "
                         + (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText())) + " sur 10 max");
@@ -117,6 +137,7 @@ public class GameLogic extends Application {
 
         btnPlusIA.setOnAction(actionEvent -> {
             if (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText()) < 10) {
+                musicSelectionNbJoueursBip();
                 nbIA.setText(String.valueOf(Integer.parseInt(nbIA.getText()) + 1));
                 nbJoueurLbl.setText("Combien de joueurs ? : "
                         + (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText())) + " sur 10 max");
@@ -138,11 +159,13 @@ public class GameLogic extends Application {
         modeBox.getChildren().add(btnReseau);
 
         btnLocal.setOnAction(actionEvent -> {
+            musicLocalReseau();
             btnLocal.setStyle("-fx-background-color: #00ff00");
             btnReseau.setStyle("-fx-background-color: #ffffff");
         });
 
         btnReseau.setOnAction(actionEvent -> {
+            musicLocalReseau();
             btnLocal.setStyle("-fx-background-color: #ffffff");
             btnReseau.setStyle("-fx-background-color: #00ff00");
         });
@@ -151,8 +174,10 @@ public class GameLogic extends Application {
 
         Button btn = new Button("Jouer");
         btn.setOnAction(actionEvent -> {
+            musicValider();
             setup(nbPlayer.getText(), nbIA.getText());
             mediaPlayerSelection.stop();
+            musicJeu();
             board.initBoard();
             jouer();
         });
@@ -179,31 +204,81 @@ public class GameLogic extends Application {
     }
 
 
+
+
+
+    //PARTIE AMBIANCE MUSICALE
     MediaPlayer mediaPlayerSelection;
     public void musicSelection(){
         String sound = "src/main/resources/fr/benjaminbrehier/_6quiprend/snd/mario-kart-8-deluxe-music-extended.mp3";
         Media s = new Media(Paths.get(sound).toUri().toString());
         mediaPlayerSelection = new MediaPlayer(s);
+        mediaPlayerSelection.setOnEndOfMedia(() -> mediaPlayerSelection.seek(Duration.ZERO));
+        mediaPlayerSelection.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayerSelection.play();
     }
-
-    /*
-     mediaPlayerSelection.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
-        if (newValue.equals(media.getDuration())) {
-            mediaPlayerSelection.seek(Duration.ZERO); // Revenir au début du média
-            mediaPlayerSelection.play(); // Rejouer la musique
-        }
-    });
-    */
-
     // Obligé de mettre tout en static si je veux appeler la méthode dans la méthode "jouer()"
     static MediaPlayer mediaPlayerJeu;
     public static void musicJeu(){
         String sound = "src/main/resources/fr/benjaminbrehier/_6quiprend/snd/nintendo-casino-music-compilation.mp3";
         Media j = new Media(Paths.get(sound).toUri().toString());
         mediaPlayerJeu = new MediaPlayer(j);
+        mediaPlayerJeu.setOnEndOfMedia(() -> mediaPlayerJeu.seek(Duration.ZERO));
+        mediaPlayerJeu.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayerJeu.play();
     }
+    MediaPlayer mediaPlayerSelectionNbJoueursBip;
+    public void musicSelectionNbJoueursBip(){
+        String sound = "src/main/resources/fr/benjaminbrehier/_6quiprend/snd/bip.mp3";
+        Media blip = new Media(Paths.get(sound).toUri().toString());
+        mediaPlayerSelectionNbJoueursBip = new MediaPlayer(blip);
+        mediaPlayerSelectionNbJoueursBip.play();
+    }
+    MediaPlayer mediaPlayerSelectionNbJoueursBoup;
+    public void musicSelectionNbJoueursBoup(){
+        String sound = "src/main/resources/fr/benjaminbrehier/_6quiprend/snd/boup.mp3";
+        Media blip = new Media(Paths.get(sound).toUri().toString());
+        mediaPlayerSelectionNbJoueursBoup = new MediaPlayer(blip);
+        mediaPlayerSelectionNbJoueursBoup.play();
+    }
+    MediaPlayer mediaPlayerLocalReseau;
+    public void musicLocalReseau(){
+        String sound = "src/main/resources/fr/benjaminbrehier/_6quiprend/snd/local_reseau.mp3";
+        Media reseau = new Media(Paths.get(sound).toUri().toString());
+        mediaPlayerLocalReseau = new MediaPlayer(reseau);
+        mediaPlayerLocalReseau.play();
+    }
+    MediaPlayer mediaPlayerValider;
+    public void musicValider(){
+        String sound = "src/main/resources/fr/benjaminbrehier/_6quiprend/snd/valider.mp3";
+        Media valider = new Media(Paths.get(sound).toUri().toString());
+        mediaPlayerValider = new MediaPlayer(valider);
+        mediaPlayerValider.play();
+    }
+    static MediaPlayer mediaPlayerFlipCard;
+    public static void musicFlipCard(){
+        String sound = "src/main/resources/fr/benjaminbrehier/_6quiprend/snd/flipcard.mp3";
+        Media flip = new Media(Paths.get(sound).toUri().toString());
+        mediaPlayerFlipCard = new MediaPlayer(flip);
+        mediaPlayerFlipCard.play();
+    }
+    static MediaPlayer mediaPlayerVictory;
+    public static void musicVictory(){
+        String sound = "src/main/resources/fr/benjaminbrehier/_6quiprend/snd/victory.mp3";
+        Media victory = new Media(Paths.get(sound).toUri().toString());
+        mediaPlayerVictory = new MediaPlayer(victory);
+        mediaPlayerVictory.play();
+    }
+    static MediaPlayer mediaPlayerWasted;
+    public static void musicWasted(){
+        String sound = "src/main/resources/fr/benjaminbrehier/_6quiprend/snd/wasted.mp3";
+        Media wasted = new Media(Paths.get(sound).toUri().toString());
+        mediaPlayerVictory = new MediaPlayer(wasted);
+        mediaPlayerVictory.play();
+    }
+
+
+
 
 
     private void setup(String nbPlayer, String nbIA) {
@@ -309,7 +384,6 @@ public class GameLogic extends Application {
     }
 
     public static void jouer() {
-        musicJeu();
         board.reloadPanel(false);
         if (cartesJouees.size() == nbRealPlayer) {
             for (Character c : players) {
@@ -431,6 +505,7 @@ public class GameLogic extends Application {
             board.reloadBoard(false);
 
             if (players.get(0).getHand().size() == 0) {
+                mediaPlayerJeu.stop();
                 int joueurGagnant = -1; // Indice du joueur gagnant (-1 pour l'initialiser)
                 int minimumPoints = Integer.MAX_VALUE; // Initialise avec la plus grande valeur possible
                 for (int p = 0; p < players.size(); p++) {
@@ -445,6 +520,12 @@ public class GameLogic extends Application {
                 }
                 System.out.println("Le joueur " + players.get(joueurGagnant).getName() + " a le moins de points avec un total de " + minimumPoints + " têtes de taureau");
                 board.finJeu(players.get(joueurGagnant), minimumPoints);
+                if (players.get(joueurGagnant) == players.get(0)){
+                    musicVictory();
+                }
+                else{
+                    musicWasted();
+                }
             } else {
                 board.addCardsEvent();
                 board.reloadBoard(false);
