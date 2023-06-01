@@ -68,12 +68,12 @@ public class GameLogic extends Application {
                 new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/logo.jpeg").toURI().toString()));
         logo.setFitWidth(250);
         logo.setFitHeight(250);
-
         vbox.getChildren().add(logo);
 
         Label nbJoueurLbl = new Label("Combien de joueurs? : 6");
         nbJoueurLbl.setStyle("-fx-font-size: 20px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "red" + "; -fx-font-weight: bold;");
         vbox.getChildren().add(nbJoueurLbl);
+
 
         HBox nombreCharacterBox = new HBox();
         nombreCharacterBox.setSpacing(10);
@@ -81,6 +81,8 @@ public class GameLogic extends Application {
         nombreCharacterBox.setPadding(new Insets(10));
 
         HBox nbJoueurBox = new HBox();
+        Label nbHumain = new Label("Joueurs  ");
+        nbHumain.setStyle("-fx-font-size: 15px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "blue" + "; -fx-font-weight: bold;");
         nbJoueurBox.setSpacing(10);
         nbJoueurBox.setAlignment(Pos.CENTER);
         nbJoueurBox.setPadding(new Insets(10));
@@ -93,8 +95,11 @@ public class GameLogic extends Application {
         nbJoueurBox.getChildren().add(btnMoins);
         nbJoueurBox.getChildren().add(nbPlayer);
         nbJoueurBox.getChildren().add(btnPlus);
+        nbJoueurBox.getChildren().add(nbHumain);
 
         HBox nbIABox = new HBox();
+        Label nbPlayerIA = new Label(" IA");
+        nbPlayerIA.setStyle("-fx-font-size: 15px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "green" + "; -fx-font-weight: bold;");
         nbIABox.setSpacing(10);
         nbIABox.setAlignment(Pos.CENTER);
         nbIABox.setPadding(new Insets(10));
@@ -107,6 +112,7 @@ public class GameLogic extends Application {
         nbIABox.getChildren().add(btnMoinsIA);
         nbIABox.getChildren().add(nbIA);
         nbIABox.getChildren().add(btnPlusIA);
+        nbIABox.getChildren().add(nbPlayerIA);
 
         btnMoins.setOnAction(actionEvent -> {
             if (Integer.parseInt(nbPlayer.getText()) > 0) {
@@ -261,6 +267,7 @@ public class GameLogic extends Application {
         Media flip = new Media(Paths.get(sound).toUri().toString());
         mediaPlayerFlipCard = new MediaPlayer(flip);
         mediaPlayerFlipCard.play();
+
     }
     static MediaPlayer mediaPlayerVictory;
     public static void musicVictory(){
@@ -273,8 +280,8 @@ public class GameLogic extends Application {
     public static void musicWasted(){
         String sound = "src/main/resources/fr/benjaminbrehier/_6quiprend/snd/wasted.mp3";
         Media wasted = new Media(Paths.get(sound).toUri().toString());
-        mediaPlayerVictory = new MediaPlayer(wasted);
-        mediaPlayerVictory.play();
+        mediaPlayerWasted = new MediaPlayer(wasted);
+        mediaPlayerWasted.play();
     }
 
 
