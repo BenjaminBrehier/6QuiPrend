@@ -187,7 +187,9 @@ public class Partie {
         btn.setOnAction(actionEvent -> {
             GameLogic.musicValider();
             setup(nbPlayer.getText(), nbIA.getText());
-            GameLogic.mediaPlayerSelection.stop();
+            if (GameLogic.mediaPlayerSelection != null) {
+                GameLogic.mediaPlayerSelection.stop();
+            }
             GameLogic.musicJeu();
             board.initBoard();
             jouer();
@@ -196,12 +198,54 @@ public class Partie {
 
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(0, 0, 50, 0));
-        vbox.setSpacing(40);
+        vbox.setSpacing(20);
 
         hbox.getChildren().add(vbox);
 
         hbox.setAlignment(Pos.CENTER);
         hbox.setPadding(new Insets(0, 0, 50, 0));
+
+
+        Label resultLabel = new Label("Résultats partie précédente :");
+        resultLabel.setStyle("-fx-font-size: 20px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "red" + "; -fx-font-weight: bold;");
+        vbox.getChildren().add(resultLabel);
+
+        HBox resultBox = new HBox();
+        resultBox.setSpacing(5);
+        resultBox.setAlignment(Pos.CENTER);
+        for (int result : GameLogic.results) {
+            Pane pane = new Pane();
+            Rectangle rect = new Rectangle(30, 30);
+            if (result == 1) {
+                rect.setFill(Color.GOLD);
+            } else if (result == 2) {
+                rect.setFill(Color.SILVER);
+            } else if (result == 3) {
+                rect.setFill(Color.BURLYWOOD);
+            } else {
+                rect.setFill(Color.BLACK);
+            }
+            rect.setStroke(Color.BLACK);
+            rect.setStrokeWidth(2);
+            pane.getChildren().add(rect);
+
+
+            Label label = new Label(String.valueOf(result));
+            label.setStyle("-fx-font-size: 20px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: red; -fx-font-weight: bold;");
+            label.setAlignment(Pos.CENTER);
+            if (result < 10) {
+                label.setPadding(new Insets(5, 0, 0, 10));
+            } else {
+                label.setPadding(new Insets(5, 0, 0, 4));
+            }
+
+            pane.getChildren().add(label);
+            resultBox.getChildren().add(pane);
+        }
+
+        resultBox.setAlignment(Pos.CENTER);
+        resultBox.setPadding(new Insets(0, 0, 50, 0));
+        vbox.getChildren().add(resultBox);
 
         Scene scene = new Scene(hbox, 1440, 855);
 
@@ -401,7 +445,9 @@ public class Partie {
             board.reloadBoard();
 
             if (players.get(0).getHand().size() == 0) {
-                GameLogic.mediaPlayerJeu.stop();
+                if (GameLogic.mediaPlayerJeu != null) {
+                    GameLogic.mediaPlayerJeu.stop();
+                }
                 int joueurGagnant = -1; // Indice du joueur gagnant (-1 pour l'initialiser)
                 int minimumPoints = Integer.MAX_VALUE; // Initialise avec la plus grande valeur possible
                 for (int p = 0; p < players.size(); p++) {
