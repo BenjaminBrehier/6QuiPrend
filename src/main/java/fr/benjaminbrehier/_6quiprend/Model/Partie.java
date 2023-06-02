@@ -56,7 +56,12 @@ public class Partie {
         VBox vbox = new VBox();
 
         Label titre = new Label("Le 6quiPrend!");
+        //Font HPFont = Font.loadFont("src/main/resources/fr/benjaminbrehier/_6quiprend/fonts/HPFont.ttf", 40);
+        //titre.setFont(HPFont);
         titre.setStyle("-fx-font-size: 60px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "red" + "; -fx-font-weight: bold;");
+        //InputStream fontStream = new InputStream(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/font/mario_kart_f2.ttf").toURI().toString());
+        //Font fontTitre = Font.loadFont(fontStream, 20);
+        //titre.setFont(fontTitre);
         vbox.getChildren().add(titre);
 
         Image backgroundImage = new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/taureaux-transformed.jpeg").toURI().toString());
@@ -68,12 +73,12 @@ public class Partie {
                 new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/logo.jpeg").toURI().toString()));
         logo.setFitWidth(250);
         logo.setFitHeight(250);
-
         vbox.getChildren().add(logo);
 
         Label nbJoueurLbl = new Label("Combien de joueurs? : 6");
         nbJoueurLbl.setStyle("-fx-font-size: 20px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "red" + "; -fx-font-weight: bold;");
         vbox.getChildren().add(nbJoueurLbl);
+
 
         HBox nombreCharacterBox = new HBox();
         nombreCharacterBox.setSpacing(10);
@@ -81,6 +86,8 @@ public class Partie {
         nombreCharacterBox.setPadding(new Insets(10));
 
         HBox nbJoueurBox = new HBox();
+        Label nbHumain = new Label("Joueurs  ");
+        nbHumain.setStyle("-fx-font-size: 15px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "blue" + "; -fx-font-weight: bold;");
         nbJoueurBox.setSpacing(10);
         nbJoueurBox.setAlignment(Pos.CENTER);
         nbJoueurBox.setPadding(new Insets(10));
@@ -93,8 +100,11 @@ public class Partie {
         nbJoueurBox.getChildren().add(btnMoins);
         nbJoueurBox.getChildren().add(nbPlayer);
         nbJoueurBox.getChildren().add(btnPlus);
+        nbJoueurBox.getChildren().add(nbHumain);
 
         HBox nbIABox = new HBox();
+        Label nbPlayerIA = new Label(" IA");
+        nbPlayerIA.setStyle("-fx-font-size: 15px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "green" + "; -fx-font-weight: bold;");
         nbIABox.setSpacing(10);
         nbIABox.setAlignment(Pos.CENTER);
         nbIABox.setPadding(new Insets(10));
@@ -107,6 +117,7 @@ public class Partie {
         nbIABox.getChildren().add(btnMoinsIA);
         nbIABox.getChildren().add(nbIA);
         nbIABox.getChildren().add(btnPlusIA);
+        nbIABox.getChildren().add(nbPlayerIA);
 
         btnMoins.setOnAction(actionEvent -> {
             if (Integer.parseInt(nbPlayer.getText()) > 0) {
@@ -185,53 +196,12 @@ public class Partie {
 
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(0, 0, 50, 0));
-        vbox.setSpacing(20);
+        vbox.setSpacing(40);
 
         hbox.getChildren().add(vbox);
 
         hbox.setAlignment(Pos.CENTER);
         hbox.setPadding(new Insets(0, 0, 50, 0));
-
-        Label resultLabel = new Label("Résultats partie précédente :");
-        resultLabel.setStyle("-fx-font-size: 20px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "red" + "; -fx-font-weight: bold;");
-        vbox.getChildren().add(resultLabel);
-
-        HBox resultBox = new HBox();
-        resultBox.setSpacing(5);
-        resultBox.setAlignment(Pos.CENTER);
-        for (int result : GameLogic.results) {
-            Pane pane = new Pane();
-            Rectangle rect = new Rectangle(30, 30);
-            if (result == 1) {
-                rect.setFill(Color.GOLD);
-            } else if (result == 2) {
-                rect.setFill(Color.SILVER);
-            } else if (result == 3) {
-                rect.setFill(Color.BURLYWOOD);
-            } else {
-                rect.setFill(Color.BLACK);
-            }
-            rect.setStroke(Color.BLACK);
-            rect.setStrokeWidth(2);
-            pane.getChildren().add(rect);
-            
-
-            Label label = new Label(String.valueOf(result));
-            label.setStyle("-fx-font-size: 20px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: red; -fx-font-weight: bold;");
-            label.setAlignment(Pos.CENTER);
-            if (result < 10) {
-                label.setPadding(new Insets(5, 0, 0, 10));
-            } else {
-                label.setPadding(new Insets(5, 0, 0, 4));
-            }
-
-            pane.getChildren().add(label);
-            resultBox.getChildren().add(pane);
-        }
-
-        resultBox.setAlignment(Pos.CENTER);
-        resultBox.setPadding(new Insets(0, 0, 50, 0));
-        vbox.getChildren().add(resultBox);
 
         Scene scene = new Scene(hbox, 1440, 855);
 
@@ -241,7 +211,6 @@ public class Partie {
 
         nbJoueurLbl.setText("Combien de joueurs ? : "
                 + (Integer.parseInt(nbIA.getText()) + Integer.parseInt(nbPlayer.getText())) + " sur 10 max");
-
     }
 
     /**
