@@ -166,25 +166,28 @@ public class IA extends Player {
     /**
      * Stratégie de l'IA
      */
-    public Card strategie2() {
+    public Card strategie() {
         for (int c = 0; c < GameLogic.partie.getBoard().getLignes().size(); c++) {
             //Si une ligne à 4 cartes et qu'on possède la carte juste après la 4ème carte de la ligne, alors on la place directement
             if (GameLogic.partie.getBoard().getLignes().get(c).size() == 4) {
                 for (int d = 0; d < this.getHand().size(); d++) {
-                    //Check si les deux cartes ont 2 de différence
+                    //Check si les deux cartes ont 1 de différence
                     if (this.getHand().get(d).getNumber() - GameLogic.partie.getBoard().getLignes().get(c).get(GameLogic.partie.getBoard().getLignes().get(c).size() - 1).getNumber() == 1) {
                         return this.getHand().get(d);
                     }
                 }
             } else if (GameLogic.partie.getBoard().getLignes().get(c).size() == 3) {
                 for (int d = 0; d < this.getHand().size(); d++) {
-                    //Check si les deux cartes ont 1 de différence
+                    //Check si les deux cartes ont 2 de différence
                     if (this.getHand().get(d).getNumber() - GameLogic.partie.getBoard().getLignes().get(c).get(GameLogic.partie.getBoard().getLignes().get(c).size() - 1).getNumber() <= 2) {
                         return this.getHand().get(d);
                     }
                 }
             } else if (GameLogic.partie.getBoard().getLignes().get(c).size() == 2) {
                 if (GameLogic.partie.getPlayers().size() <= 3) {
+                    // Si il y a 3 joueurs ou moins, et qu'il y a 2 cartes dans une des lignes
+                    // on fait la différence entre la derniere carte de cette ligne et le nombre le plus proche de la derniere carte des autre lignes
+                    // puis on joue une carte qui valide ces parametres.
                     int diff = 104;
                     for (int a = 0; a < GameLogic.partie.getBoard().getLignes().size(); a++) {
                         if (a == c) {
@@ -204,7 +207,7 @@ public class IA extends Player {
 
                 }
                 for (int d = 0; d < this.getHand().size(); d++) {
-                    //Check si les deux cartes ont 1 de différence
+                    //Check si les deux cartes ont 3 de différence
                     for (int g = 0; g < this.getHand().get(d).getNumber(); g++) {
                         if (this.getHand().get(d).getNumber() - GameLogic.partie.getBoard().getLignes().get(c).get(GameLogic.partie.getBoard().getLignes().get(c).size() - 1).getNumber() <= 3) {
                             return this.getHand().get(d);
@@ -223,8 +226,8 @@ public class IA extends Player {
             }
             if (totalTetes2 <= 2) {
                 for (Card cartesMainIa : this.getHand()) {
-                    //Si l'IA possède une carte faible (valeur <= 12)
-                    if (cartesMainIa.getNumber() <= 12) {
+                    //Si l'IA possède une carte faible (valeur <= 15)
+                    if (cartesMainIa.getNumber() <= 15) {
                         return cartesMainIa;
                     }
                 }
@@ -234,7 +237,7 @@ public class IA extends Player {
             if (GameLogic.partie.getBoard().getLignes().get(c).size() <= 4) {
                 for (int e = 0; e < 104; e++)
                     for (int d = 0; d < this.getHand().size(); d++) {
-                        //Check si les deux cartes ont 2 ou moins de différence
+                        //Choisit la carte avec le moins de différence avec une carte du board
                         if (this.getHand().get(d).getNumber() - GameLogic.partie.getBoard().getLignes().get(c).get(GameLogic.partie.getBoard().getLignes().get(c).size() - 1).getNumber() == e) {
                             return this.getHand().get(d);
                         }
@@ -242,6 +245,9 @@ public class IA extends Player {
                     }
             }
         }
+        //cas ou toutes les places sont prises
+        // L'IA va choisir la ligne avec le moins de bullhead et va choisir une carte qui est +20 que la derniere carte de cette ligne
+        // si il n'y en a pas alors on fait +19 puis +18 puis +17 etc.
         boolean isFull = GameLogic.partie.getBoard().getLignes().get(0).size() == 5 && GameLogic.partie.getBoard().getLignes().get(1).size() == 5 && GameLogic.partie.getBoard().getLignes().get(2).size() == 5 && GameLogic.partie.getBoard().getLignes().get(3).size() == 5;
         if (isFull == true){
             int min = 0;
@@ -259,6 +265,7 @@ public class IA extends Player {
                 }
             }
         }
+        // si aucun des cas précédent n'a marché alors L'IA choisit une carte random
         int random = (int) (Math.random() * (this.getHand().size() - 1));
         return this.getHand().get(random);
     }
@@ -267,8 +274,7 @@ public class IA extends Player {
      * Fais jouer l'IA
      */
     public void play () {
-        // int aléatoire entre 0 et ia.getHand().size()
-        Card carte = strategie2();
+        Card carte = strategie();
         GameLogic.partie.getCartesJouees().put(this, carte);
         this.getHand().remove(carte);
 
