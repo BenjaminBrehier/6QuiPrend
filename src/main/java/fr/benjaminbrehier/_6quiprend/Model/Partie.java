@@ -38,6 +38,7 @@ public class Partie {
     private Board board;
     private HashMap<Player, Card> cartesJouees;
     private int nbRealPlayer;
+    private Player playerPlaying;
 
     public Partie() {
         pioche = new ArrayList<>();
@@ -201,7 +202,7 @@ public class Partie {
         hbox.setPadding(new Insets(0, 0, 50, 0));
 
 
-        Label resultLabel = new Label("Résultats partie précédente :");
+        Label resultLabel = new Label("Résultats parties solo précédentes :");
         resultLabel.setStyle("-fx-font-size: 20px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "red" + "; -fx-font-weight: bold;");
         vbox.getChildren().add(resultLabel);
 
@@ -309,6 +310,8 @@ public class Partie {
             players.add(player);
         }
 
+        playerPlaying = players.get(0);
+
         for (int i = 0; i < Integer.parseInt(nbIA); i++) {
             ArrayList<Card> characterHand = new ArrayList<>();
             for (int j = 0; j < 10; j++) {
@@ -400,8 +403,8 @@ public class Partie {
                     } else {
                         Alert alert = new Alert(AlertType.CONFIRMATION);
                         alert.setTitle("Sélection de ligne");
-                        alert.setHeaderText("Veuillez choisir une ligne");
-                        alert.setContentText("Aucune ligne ne peut accueillir cette carte : " + card.toString());
+                        alert.setHeaderText("Veuillez choisir une ligne " + playerPlaying.getName() + ".");
+                        alert.setContentText("Aucune ligne ne peut accueillir cette carte : " + card.getNumber());
 
                         ButtonType buttonType1 = new ButtonType("1");
                         ButtonType buttonType2 = new ButtonType("2");
@@ -470,6 +473,26 @@ public class Partie {
         }
     }
 
+    public void switchPlayerPlaying() {
+        int index = players.indexOf(playerPlaying);
+        for (int i = 0; i < players.size(); i++) {
+            if (i!= index && i>index && !(players.get(i) instanceof IA)) {
+                playerPlaying = players.get(i);
+                break;
+            }
+        }
+
+        if (index == players.indexOf(playerPlaying)) {
+            for (Player player : players) {
+                if (!(player instanceof IA)) {
+                    playerPlaying = player;
+                    break;
+                }
+            }
+        }
+        board.reloadLignes();
+    }
+
     public Board getBoard() {
         return board;
     }
@@ -484,5 +507,13 @@ public class Partie {
 
     public ArrayList<Card> getPioche() {
         return pioche;
+    }
+
+    public int getNbRealPlayer() {
+        return nbRealPlayer;
+    }
+
+    public Player getPlayerPlaying() {
+        return playerPlaying;
     }
 }

@@ -8,6 +8,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import fr.benjaminbrehier._6quiprend.GameLogic;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -59,7 +61,7 @@ public class Board {
      * Suppression des events sur les cartes
      */
     public void removeCardsEvent() {
-        for (Card card : GameLogic.partie.getPlayers().get(0).getHand()) {
+        for (Card card : GameLogic.partie.getPlayerPlaying().getHand()) {
             card.getGraphicCard().setOnMouseEntered(mouseEvent -> {
             });
             card.getGraphicCard().setOnMouseExited(mouseEvent -> {
@@ -73,7 +75,7 @@ public class Board {
      * Ajout des events sur les cartes
      */
     public void addCardsEvent() {
-        for (Card card : GameLogic.partie.getPlayers().get(0).getHand()) {
+        for (Card card : GameLogic.partie.getPlayerPlaying().getHand()) {
             card.getGraphicCard().setOnMouseEntered(mouseEvent -> {
                 ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.RED);
             });
@@ -84,8 +86,8 @@ public class Board {
                 GameLogic.musicFlipCard();
                 removeCardsEvent();
                 System.out.println("Carte jouée : " + card);
-                GameLogic.partie.getPlayers().get(0).getHand().remove(card);
-                GameLogic.partie.getCartesJouees().put(GameLogic.partie.getPlayers().get(0), card);
+                GameLogic.partie.getPlayerPlaying().getHand().remove(card);
+                GameLogic.partie.getCartesJouees().put(GameLogic.partie.getPlayerPlaying(), card);
                 // card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY() + 10);
                 ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
                 GameLogic.partie.jouer();
@@ -192,7 +194,7 @@ public class Board {
         playerHand.setAlignment(Pos.CENTER);
         playerHand.setSpacing(10);
 
-        for (Card card : GameLogic.partie.getPlayers().get(0).getHand()) {
+        for (Card card : GameLogic.partie.getPlayerPlaying().getHand()) {
             playerHand.getChildren().add(card.getGraphicCard());
         }
         lignesVBox.getChildren().add(playerHand);
@@ -292,12 +294,30 @@ public class Board {
             }
         }
 
-        for (Card card : GameLogic.partie.getPlayers().get(0).getPoints()) {
+        for (Card card : GameLogic.partie.getPlayerPlaying().getPoints()) {
             card.getGraphicCard().setRotate(Math.random() * 30 - 10);
             card.getGraphicCard().setLayoutX(0);
             card.getGraphicCard().setLayoutY(0);
             card.getGraphicCard().toFront();
             points.getChildren().add(card.getGraphicCard());
+        }
+
+        if (GameLogic.partie.getNbRealPlayer() > 1) {
+            Button swappButton = new Button("Joueur suivant");
+            swappButton.setPrefWidth(100);
+            swappButton.setPrefHeight(60);
+            swappButton.setLayoutX(1150);
+            swappButton.setLayoutY(700);
+            swappButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    GameLogic.partie.switchPlayerPlaying();
+                    addCardsEvent();
+                    reloadPoints();
+                }
+            });
+
+            board.getChildren().add(swappButton);
         }
 
         addCardsEvent();
@@ -317,27 +337,25 @@ public class Board {
 
         reloadActions();
 
-        Pane points = new Pane();
-        points.setLayoutX(1300);
-        points.setLayoutY(670);
-        points.setPrefWidth(100);
-        points.setPrefHeight(100);
-        board.getChildren().add(points);
+        reloadPoints();
 
+        if (GameLogic.partie.getNbRealPlayer() > 1) {
+            Button swappButton = new Button("Joueur suivant");
+            swappButton.setPrefWidth(100);
+            swappButton.setPrefHeight(60);
+            swappButton.setLayoutX(1150);
+            swappButton.setLayoutY(700);
+            swappButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    GameLogic.partie.switchPlayerPlaying();
+                    addCardsEvent();
+                    reloadPoints();
 
-        // On fait disparaitre les cartes les cartes ramassées par les autres joueurs
-        for (int i = 1; i < GameLogic.partie.getPlayers().size(); i++) {
-            for (Card card : GameLogic.partie.getPlayers().get(i).getPoints()) {
-                card.getGraphicCard().setVisible(false);
-            }
-        }
-
-        for (Card card : GameLogic.partie.getPlayers().get(0).getPoints()) {
-            card.getGraphicCard().setRotate(Math.random() * 30 - 10);
-            card.getGraphicCard().setLayoutX(0);
-            card.getGraphicCard().setLayoutY(0);
-            card.getGraphicCard().toFront();
-            points.getChildren().add(card.getGraphicCard());
+                }
+            });
+            board.getChildren().remove(4);
+            board.getChildren().add(swappButton);
         }
 
         addCardsEvent();
@@ -405,7 +423,7 @@ public class Board {
         playerHand.setAlignment(Pos.CENTER);
         playerHand.setSpacing(10);
 
-        for (Card card : GameLogic.partie.getPlayers().get(0).getHand()) {
+        for (Card card : GameLogic.partie.getPlayerPlaying().getHand()) {
             playerHand.getChildren().add(card.getGraphicCard());
         }
         lignesVBox.getChildren().add(playerHand);
@@ -505,6 +523,40 @@ public class Board {
         scrollPane.setVvalue(1);
     }
 
+    public void reloadPoints() {
+        Pane points = (Pane) board.getChildren().get(3);
+        points.getChildren().clear();
+        points.setLayoutX(1300);
+        points.setLayoutY(670);
+        points.setPrefWidth(100);
+        points.setPrefHeight(100);
+
+        for (Player player : GameLogic.partie.getPlayers()) {
+            if (player.equals(GameLogic.partie.getPlayerPlaying())) {
+                for (Card card : player.getPoints()) {
+                    card.getGraphicCard().setVisible(true);
+                    card.getGraphicCard().setRotate(Math.random() * 30 - 10);
+                    card.getGraphicCard().setLayoutX(0);
+                    card.getGraphicCard().setLayoutY(0);
+                    card.getGraphicCard().toFront();
+                    points.getChildren().add(card.getGraphicCard());
+                }
+            } else {
+                for (Card card : player.getPoints()) {
+                    card.getGraphicCard().setVisible(false);
+                }
+            }
+        }
+
+        // for (Card card : GameLogic.partie.getPlayerPlaying().getPoints()) {
+        //     card.getGraphicCard().setRotate(Math.random() * 30 - 10);
+        //     card.getGraphicCard().setLayoutX(0);
+        //     card.getGraphicCard().setLayoutY(0);
+        //     card.getGraphicCard().toFront();
+        //     points.getChildren().add(card.getGraphicCard());
+        // }
+    }
+
 
 
     public void removeCard(Card card) {
@@ -585,7 +637,7 @@ public class Board {
             score.setTextAlignment(TextAlignment.CENTER);
             graphicClassement.add(score, 2, cpt++);
 
-            if (GameLogic.partie.getPlayers().get(0).getName().equals(entry.getKey().getName())) {
+            if (GameLogic.partie.getPlayerPlaying().getName().equals(entry.getKey().getName()) && GameLogic.partie.getNbRealPlayer() == 1) {
                 GameLogic.results.add(cpt);
             }
         }
