@@ -81,7 +81,7 @@ public class Partie {
         nombreCharacterBox.setPadding(new Insets(10));
 
         HBox nbJoueurBox = new HBox();
-        Label nbHumain = new Label("Joueurs  ");
+        Label nbHumain = new Label("Joueurs");
         nbHumain.setStyle("-fx-font-size: 15px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "blue" + "; -fx-font-weight: bold;");
         nbJoueurBox.setSpacing(10);
         nbJoueurBox.setAlignment(Pos.CENTER);
@@ -98,7 +98,7 @@ public class Partie {
         nbJoueurBox.getChildren().add(nbHumain);
 
         HBox nbIABox = new HBox();
-        Label nbPlayerIA = new Label(" IA");
+        Label nbPlayerIA = new Label("IA");
         nbPlayerIA.setStyle("-fx-font-size: 15px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "green" + "; -fx-font-weight: bold;");
         nbIABox.setSpacing(10);
         nbIABox.setAlignment(Pos.CENTER);

@@ -595,6 +595,12 @@ public class Board {
         Button button = new Button("Rejouer");
         button.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
         button.setOnAction(e -> {
+            if (GameLogic.mediaPlayerVictory != null){
+                GameLogic.mediaPlayerVictory.stop();
+            }
+            if (GameLogic.mediaPlayerWasted != null){
+                GameLogic.mediaPlayerWasted.stop();
+            }
             board.getChildren().remove(rect);
             board.getChildren().remove(text);
             board.getChildren().remove(graphicClassement);

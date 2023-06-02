@@ -169,6 +169,7 @@ public class IA extends Character {
      */
     public Card strategie2() {
         for (int c = 0; c < GameLogic.partie.getBoard().getLignes().size(); c++) {
+            //Si une ligne à 4 cartes et qu'on possède la carte juste après la 4ème carte de la ligne, alors on la place directement
             if (GameLogic.partie.getBoard().getLignes().get(c).size() == 4) {
                 for (int d = 0; d < this.getHand().size(); d++) {
                     //Check si les deux cartes ont 2 de différence

@@ -46,13 +46,13 @@ public class GameLogic extends Application {
     //PARTIE AMBIANCE MUSICALE
     public static MediaPlayer mediaPlayerSelection;
     public static MediaPlayer mediaPlayerJeu;
-    static MediaPlayer mediaPlayerSelectionNbJoueursBip;
-    static MediaPlayer mediaPlayerSelectionNbJoueursBoup;
-    static MediaPlayer mediaPlayerLocalReseau;
-    static MediaPlayer mediaPlayerValider;
-    static MediaPlayer mediaPlayerFlipCard;
-    static MediaPlayer mediaPlayerVictory;
-    static MediaPlayer mediaPlayerWasted;
+    public static MediaPlayer mediaPlayerSelectionNbJoueursBip;
+    public static MediaPlayer mediaPlayerSelectionNbJoueursBoup;
+    public static MediaPlayer mediaPlayerLocalReseau;
+    public static MediaPlayer mediaPlayerValider;
+    public static MediaPlayer mediaPlayerFlipCard;
+    public static MediaPlayer mediaPlayerVictory;
+    public static MediaPlayer mediaPlayerWasted;
     
     /**
      * Permet de lancer la musique selection
