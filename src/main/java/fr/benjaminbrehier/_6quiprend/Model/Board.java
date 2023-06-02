@@ -11,6 +11,7 @@ import fr.benjaminbrehier._6quiprend.GameLogic;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -54,8 +55,11 @@ public class Board {
                 '}';
     }
 
+    /**
+     * Suppression des events sur les cartes
+     */
     public void removeCardsEvent() {
-        for (Card card : GameLogic.players.get(0).getHand()) {
+        for (Card card : GameLogic.partie.getPlayers().get(0).getHand()) {
             card.getGraphicCard().setOnMouseEntered(mouseEvent -> {
             });
             card.getGraphicCard().setOnMouseExited(mouseEvent -> {
@@ -63,22 +67,13 @@ public class Board {
             card.getGraphicCard().setOnMouseClicked(mouseEvent -> {
             });
         }
-
-
-        // for (int i = 4; i < ((VBox) board.getChildren().get(0)).getChildren().size(); i++) {
-        //     HBox hBox = (HBox) ((VBox) board.getChildren().get(0)).getChildren().get(i);
-        //     for (int j = 0; j < hBox.getChildren().size(); j++) {
-        //         Pane pane = (Pane) hBox.getChildren().get(j);
-        //         pane.setOnMouseEntered(mouseEvent -> {
-        //         });
-        //         pane.setOnMouseExited(mouseEvent -> {
-        //         });
-        //     }
-        // }
     }
 
+    /**
+     * Ajout des events sur les cartes
+     */
     public void addCardsEvent() {
-        for (Card card : GameLogic.players.get(0).getHand()) {
+        for (Card card : GameLogic.partie.getPlayers().get(0).getHand()) {
             card.getGraphicCard().setOnMouseEntered(mouseEvent -> {
                 ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.RED);
             });
@@ -89,16 +84,19 @@ public class Board {
                 GameLogic.musicFlipCard();
                 removeCardsEvent();
                 System.out.println("Carte jouée : " + card);
-                GameLogic.players.get(0).getHand().remove(card);
-                GameLogic.cartesJouees.put(GameLogic.players.get(0), card);
-                GameLogic.players.get(0).setHasChoose(true);
+                GameLogic.partie.getPlayers().get(0).getHand().remove(card);
+                GameLogic.partie.getCartesJouees().put(GameLogic.partie.getPlayers().get(0), card);
+                GameLogic.partie.getPlayers().get(0).setHasChoose(true);
                 // card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY() + 10);
                 ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
-                GameLogic.jouer();
+                GameLogic.partie.jouer();
             });
         }
     }
 
+    /**
+     * Ajout des events sur les lignes
+     */
     public void addLignesEvent() {
         for (int i = 0; i < ((VBox) board.getChildren().get(0)).getChildren().size() - 1; i++) {
             HBox hBox = (HBox) ((VBox) board.getChildren().get(0)).getChildren().get(i);
@@ -122,6 +120,9 @@ public class Board {
         }
     }
 
+    /**
+     * Suppression des events sur les lignes
+     */
     public void removeLignesEvent() {
         for (int i = 0; i < ((VBox) board.getChildren().get(0)).getChildren().size() - 1; i++) {
             HBox hBox = (HBox) ((VBox) board.getChildren().get(0)).getChildren().get(i);
@@ -132,6 +133,9 @@ public class Board {
         }
     }
 
+    /**
+     * Initialisation du plateau
+     */
     public void initBoard() {
         VBox lignesVBox = new VBox();
         lignesVBox.setLayoutX(0);
@@ -189,7 +193,7 @@ public class Board {
         playerHand.setAlignment(Pos.CENTER);
         playerHand.setSpacing(10);
 
-        for (Card card : GameLogic.players.get(0).getHand()) {
+        for (Card card : GameLogic.partie.getPlayers().get(0).getHand()) {
             playerHand.getChildren().add(card.getGraphicCard());
         }
         lignesVBox.getChildren().add(playerHand);
@@ -212,12 +216,12 @@ public class Board {
 
         int cptCol = 0;
         int cptLigne = 0;
-        for (int i = 0; i < GameLogic.players.size(); i++) {
+        for (int i = 0; i < GameLogic.partie.getPlayers().size(); i++) {
             VBox playerBox = new VBox();
             playerBox.setSpacing(10);
             playerBox.setAlignment(Pos.CENTER);
 
-            Label label = new Label(GameLogic.players.get(i).getName());
+            Label label = new Label(GameLogic.partie.getPlayers().get(i).getName());
             label.setFont(new Font("Arial", 20));
             label.setTextFill(Color.WHITE);
 
@@ -252,9 +256,9 @@ public class Board {
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setPrefWidth(600);
-        scrollPane.setPrefHeight(100);
+        scrollPane.setPrefHeight(230);
         scrollPane.setLayoutX(800);
-        scrollPane.setLayoutY(470);
+        scrollPane.setLayoutY(430);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setStyle("-fx-background-color: transparent;");
@@ -283,13 +287,13 @@ public class Board {
 
 
         // On fait disparaitre les cartes les cartes ramassées par les autres joueurs
-        for (int i = 1; i < GameLogic.players.size(); i++) {
-            for (Card card : GameLogic.players.get(i).getPoints()) {
+        for (int i = 1; i < GameLogic.partie.getPlayers().size(); i++) {
+            for (Card card : GameLogic.partie.getPlayers().get(i).getPoints()) {
                 card.getGraphicCard().setVisible(false);
             }
         }
 
-        for (Card card : GameLogic.players.get(0).getPoints()) {
+        for (Card card : GameLogic.partie.getPlayers().get(0).getPoints()) {
             card.getGraphicCard().setRotate(Math.random() * 30 - 10);
             card.getGraphicCard().setLayoutX(0);
             card.getGraphicCard().setLayoutY(0);
@@ -302,7 +306,10 @@ public class Board {
         GameLogic.stage.setScene(scene);
     }
 
-    public void reloadBoard(boolean wait) {
+    /**
+     * Recharge l'affichage du plateau
+     */
+    public void reloadBoard() {
         reloadLignes();
 
         board.setStyle("-fx-background-size: 1440 950; -fx-background-image: url('https://img.freepik.com/vecteurs-libre/table-manger-bois-vue-dessus-vecteur-realiste_107791-13011.jpg?w=1380&t=st=1683874217~exp=1683874817~hmac=4a55c4c2786ec3d84229b244ac8af4ad194f73d72b5687727a81fb6b482a77e5')");
@@ -320,13 +327,13 @@ public class Board {
 
 
         // On fait disparaitre les cartes les cartes ramassées par les autres joueurs
-        for (int i = 1; i < GameLogic.players.size(); i++) {
-            for (Card card : GameLogic.players.get(i).getPoints()) {
+        for (int i = 1; i < GameLogic.partie.getPlayers().size(); i++) {
+            for (Card card : GameLogic.partie.getPlayers().get(i).getPoints()) {
                 card.getGraphicCard().setVisible(false);
             }
         }
 
-        for (Card card : GameLogic.players.get(0).getPoints()) {
+        for (Card card : GameLogic.partie.getPlayers().get(0).getPoints()) {
             card.getGraphicCard().setRotate(Math.random() * 30 - 10);
             card.getGraphicCard().setLayoutX(0);
             card.getGraphicCard().setLayoutY(0);
@@ -337,6 +344,9 @@ public class Board {
         addCardsEvent();
     }
 
+    /**
+     * Recharge l'affichage des lignes
+     */
     public void reloadLignes() {
         VBox lignesVBox = (VBox) board.getChildren().get(0);
         lignesVBox.getChildren().clear();
@@ -396,7 +406,7 @@ public class Board {
         playerHand.setAlignment(Pos.CENTER);
         playerHand.setSpacing(10);
 
-        for (Card card : GameLogic.players.get(0).getHand()) {
+        for (Card card : GameLogic.partie.getPlayers().get(0).getHand()) {
             playerHand.getChildren().add(card.getGraphicCard());
         }
         lignesVBox.getChildren().add(playerHand);
@@ -404,6 +414,10 @@ public class Board {
         lignesVBox.setPadding(new Insets(10, 0, 0, 10));
     }
 
+    /**
+     * Recharge l'affichage des cartes jouées par les joueurs
+     * @param showCard
+     */
     public void reloadPanel(boolean showCard) {
         GridPane gridPane = (GridPane) board.getChildren().get(1);
         gridPane.getChildren().clear();
@@ -419,12 +433,12 @@ public class Board {
 
         int cptCol = 0;
         int cptLigne = 0;
-        for (int i = 0; i < GameLogic.players.size(); i++) {
+        for (int i = 0; i < GameLogic.partie.getPlayers().size(); i++) {
             VBox playerBox = new VBox();
             playerBox.setSpacing(10);
             playerBox.setAlignment(Pos.CENTER);
 
-            Label label = new Label(GameLogic.players.get(i).getName());
+            Label label = new Label(GameLogic.partie.getPlayers().get(i).getName());
             label.setFont(new Font("Arial", 20));
             label.setTextFill(Color.WHITE);
 
@@ -445,11 +459,11 @@ public class Board {
             rectangle.setVisible(true);
             rectangle.toFront();
 
-            if (GameLogic.cartesJouees.containsKey(GameLogic.players.get(i))) {
+            if (GameLogic.partie.getCartesJouees().containsKey(GameLogic.partie.getPlayers().get(i))) {
                 if (showCard) {
-                    playerBox.getChildren().add(GameLogic.cartesJouees.get(GameLogic.players.get(i)).getGraphicCard());
+                    playerBox.getChildren().add(GameLogic.partie.getCartesJouees().get(GameLogic.partie.getPlayers().get(i)).getGraphicCard());
                 } else {
-                    playerBox.getChildren().add(GameLogic.cartesJouees.get(GameLogic.players.get(i)).getBackCard());
+                    playerBox.getChildren().add(GameLogic.partie.getCartesJouees().get(GameLogic.partie.getPlayers().get(i)).getBackCard());
                 }
             } else {
                 playerBox.getChildren().add(rectangle);
@@ -464,12 +478,15 @@ public class Board {
         }
     }
 
+    /**
+     * Recharge l'affichage des actions effectuées par les joueurs
+     */
     public void reloadActions() {
         ScrollPane scrollPane = (ScrollPane) board.getChildren().get(2);
         scrollPane.setPrefWidth(600);
-        scrollPane.setPrefHeight(150);
+        scrollPane.setPrefHeight(230);
         scrollPane.setLayoutX(800);
-        scrollPane.setLayoutY(470);
+        scrollPane.setLayoutY(430);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
@@ -501,6 +518,11 @@ public class Board {
         }
     }
 
+    /**
+     * Affiche le gagnant et le classement des joueurs ainsi que le bouton rejouer
+     * @param gagnant
+     * @param points
+     */
     public void finJeu(Character gagnant, int points) {
         Rectangle rect = new Rectangle(0, 0, 1440, 855);
         rect.setFill(Color.BLACK);
@@ -511,11 +533,11 @@ public class Board {
         text.setFill(Color.WHITE);
         text.setTextAlignment(TextAlignment.CENTER);
         text.setX(1440 / 2 - text.getLayoutBounds().getWidth() / 2);
-        text.setY(555 / 2 - text.getLayoutBounds().getHeight() / 2);
+        text.setY(333 / 2 - text.getLayoutBounds().getHeight() / 2);
 
         // Déterminer la classement des joueurs et les afficher dans l'ordre avec leur score
         HashMap<Character, Integer> listeJoueurScore = new HashMap<>();
-        for (Character character : GameLogic.players) {
+        for (Character character : GameLogic.partie.getPlayers()) {
             int score = 0;
             for (Card card : character.getPoints()) {
                 score += card.getBullHead();
@@ -563,11 +585,30 @@ public class Board {
             score.setFill(color);
             score.setTextAlignment(TextAlignment.CENTER);
             graphicClassement.add(score, 2, cpt++);
+
+            if (GameLogic.partie.getPlayers().get(0).getName().equals(entry.getKey().getName())) {
+                GameLogic.results.add(cpt);
+            }
         }
 
         graphicClassement.setLayoutX(550);
-        graphicClassement.setLayoutY(500 / 2 - graphicClassement.getLayoutBounds().getHeight() / 2 + 50);
-        board.getChildren().addAll(rect, text, graphicClassement);
+        graphicClassement.setLayoutY(300 / 2 - graphicClassement.getLayoutBounds().getHeight() / 2 + 50);
+        Button button = new Button("Rejouer");
+        button.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
+        button.setOnAction(e -> {
+            board.getChildren().remove(rect);
+            board.getChildren().remove(text);
+            board.getChildren().remove(graphicClassement);
+            reloadActions();
+            GameLogic.partie = new Partie();
+            GameLogic.partie.start();
+        });
+
+        button.setLayoutX(650);
+        button.setLayoutY(755);
+
+        board.getChildren().addAll(rect, text, graphicClassement, button);
+
 
         //     Text text2 = new Text(character.getName() + " : " + classement.get(character));
         //     text2.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
@@ -579,6 +620,10 @@ public class Board {
         //     board.getChildren().add(text2);        
     }
 
+    /** 
+     * Ajoute une action à la liste des actions
+     * @param action
+     */
     public void addAction(String action) {
         actions.add(action);
     }
