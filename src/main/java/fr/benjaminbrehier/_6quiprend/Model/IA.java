@@ -192,7 +192,7 @@ public class IA extends Player {
                     for (int a = 0; a < GameLogic.partie.getBoard().getLignes().size(); a++) {
                         if (a == c) {
                         } else if (GameLogic.partie.getBoard().getLignes().get(a).get(GameLogic.partie.getBoard().getLignes().get(a).size() - 1).getNumber() >= GameLogic.partie.getBoard().getLignes().get(c).get(1).getNumber()) {
-                            diff = GameLogic.partie.getBoard().getLignes().get(a).get(GameLogic.partie.getBoard().getLignes().get(a).size() - 1).getNumber() - GameLogic.partie.getBoard().getLignes().get(a).get(1).getNumber();
+                            diff = GameLogic.partie.getBoard().getLignes().get(a).get(GameLogic.partie.getBoard().getLignes().get(a).size() - 1).getNumber() - GameLogic.partie.getBoard().getLignes().get(c).get(1).getNumber();
 
                         }
                     }if (diff != 104){

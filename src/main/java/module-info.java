@@ -11,4 +11,6 @@ module fr.benjaminbrehier._6quiprend {
     exports fr.benjaminbrehier._6quiprend;
     exports fr.benjaminbrehier._6quiprend.Model;
     opens fr.benjaminbrehier._6quiprend.Model to javafx.fxml;
+    exports fr.benjaminbrehier._6quiprend.View;
+    opens fr.benjaminbrehier._6quiprend.View to javafx.fxml;
 }

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.benjaminbrehier._6quiprend.GameLogic;
+import fr.benjaminbrehier._6quiprend.View.Board;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -60,7 +61,7 @@ public class Partie {
         titre.setStyle("-fx-font-size: 60px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "red" + "; -fx-font-weight: bold;");
         vbox.getChildren().add(titre);
 
-        Image backgroundImage = new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/taureaux-transformed.jpeg").toURI().toString());
+        Image backgroundImage = new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/interville.jpg").toURI().toString());
         BackgroundImage bgImg = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1920,1080, true, true, true, true));
         Background bg = new Background(bgImg);
         hbox.setBackground(bg);
