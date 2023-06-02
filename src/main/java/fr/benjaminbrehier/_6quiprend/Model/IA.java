@@ -171,7 +171,7 @@ public class IA extends Character {
         for (int c = 0; c < GameLogic.partie.getBoard().getLignes().size(); c++) {
             if (GameLogic.partie.getBoard().getLignes().get(c).size() == 4) {
                 for (int d = 0; d < this.getHand().size(); d++) {
-                    //Check si les deux cartes ont 1 de différence
+                    //Check si les deux cartes ont 2 de différence
                     if (this.getHand().get(d).getNumber() - GameLogic.partie.getBoard().getLignes().get(c).get(GameLogic.partie.getBoard().getLignes().get(c).size() - 1).getNumber() == 1) {
                         return this.getHand().get(d);
                     }
@@ -184,10 +184,31 @@ public class IA extends Character {
                     }
                 }
             } else if (GameLogic.partie.getBoard().getLignes().get(c).size() == 2) {
+                if (GameLogic.partie.getPlayers().size() <= 3) {
+                    int diff = 104;
+                    for (int a = 0; a < GameLogic.partie.getBoard().getLignes().size(); a++) {
+                        if (a == c) {
+                        } else if (GameLogic.partie.getBoard().getLignes().get(a).get(GameLogic.partie.getBoard().getLignes().get(a).size() - 1).getNumber() >= GameLogic.partie.getBoard().getLignes().get(c).get(1).getNumber()) {
+                            diff = GameLogic.partie.getBoard().getLignes().get(a).get(GameLogic.partie.getBoard().getLignes().get(a).size() - 1).getNumber() - GameLogic.partie.getBoard().getLignes().get(a).get(1).getNumber();
+
+                        }
+                    }if (diff != 104){
+                        for (int e = 0; e < diff; e++) {
+                            for (int d = 0; d < this.getHand().size(); d++) {
+                                if (this.getHand().get(d).getNumber() - GameLogic.partie.getBoard().getLignes().get(c).get(GameLogic.partie.getBoard().getLignes().get(c).size() - 1).getNumber() == e) {
+                                    return this.getHand().get(d);
+                                }
+                            }
+                        }
+                    }
+
+                }
                 for (int d = 0; d < this.getHand().size(); d++) {
                     //Check si les deux cartes ont 1 de différence
-                    if (this.getHand().get(d).getNumber() - GameLogic.partie.getBoard().getLignes().get(c).get(GameLogic.partie.getBoard().getLignes().get(c).size() - 1).getNumber() <= 3) {
-                        return this.getHand().get(d);
+                    for (int g = 0; g < this.getHand().get(d).getNumber(); g++) {
+                        if (this.getHand().get(d).getNumber() - GameLogic.partie.getBoard().getLignes().get(c).get(GameLogic.partie.getBoard().getLignes().get(c).size() - 1).getNumber() <= 3) {
+                            return this.getHand().get(d);
+                        }
                     }
                 }
             }
@@ -202,7 +223,7 @@ public class IA extends Character {
             }
             if (totalTetes2 <= 2) {
                 for (Card cartesMainIa : this.getHand()) {
-                    //Si l'IA possède une carte faible (valeur <= 5)
+                    //Si l'IA possède une carte faible (valeur <= 12)
                     if (cartesMainIa.getNumber() <= 12) {
                         return cartesMainIa;
                     }
@@ -211,7 +232,6 @@ public class IA extends Character {
         }
         for (int c = 0; c < GameLogic.partie.getBoard().getLignes().size(); c++) {
             if (GameLogic.partie.getBoard().getLignes().get(c).size() <= 4) {
-                int ecart = 0;
                 for (int e = 0; e < 104; e++)
                     for (int d = 0; d < this.getHand().size(); d++) {
                         //Check si les deux cartes ont 2 ou moins de différence
