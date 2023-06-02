@@ -460,11 +460,14 @@ public class Partie {
                 }
                 System.out.println("Le joueur " + players.get(joueurGagnant).getName() + " a le moins de points avec un total de " + minimumPoints + " têtes de taureau");
                 board.finJeu(players.get(joueurGagnant), minimumPoints);
-                if (players.get(joueurGagnant) == players.get(0)){
+                if (players.get(joueurGagnant) == players.get(0) && GameLogic.partie.getNbRealPlayer() == 1){
                     GameLogic.musicVictory();
                 }
-                else{
+                else if(players.get(joueurGagnant) != players.get(0) && GameLogic.partie.getNbRealPlayer() == 1){
                     GameLogic.musicWasted();
+                }
+                else{
+                    GameLogic.musicVictoryPlayers();
                 }
             } else {
                 board.addCardsEvent();

@@ -647,11 +647,14 @@ public class Board {
         Button button = new Button("Rejouer");
         button.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
         button.setOnAction(e -> {
-            if (GameLogic.mediaPlayerVictory != null){
+            if (GameLogic.mediaPlayerVictory != null && GameLogic.partie.getNbRealPlayer() == 1){
                 GameLogic.mediaPlayerVictory.stop();
             }
-            if (GameLogic.mediaPlayerWasted != null){
+            if (GameLogic.mediaPlayerWasted != null  && GameLogic.partie.getNbRealPlayer() == 1){
                 GameLogic.mediaPlayerWasted.stop();
+            }
+            if (GameLogic.partie.getNbRealPlayer() > 1){
+                GameLogic.mediaPlayerVictoryPlayers.stop();
             }
             board.getChildren().remove(rect);
             board.getChildren().remove(text);

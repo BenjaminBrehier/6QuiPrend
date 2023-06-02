@@ -53,6 +53,7 @@ public class GameLogic extends Application {
     public static MediaPlayer mediaPlayerFlipCard;
     public static MediaPlayer mediaPlayerVictory;
     public static MediaPlayer mediaPlayerWasted;
+    public static MediaPlayer mediaPlayerVictoryPlayers;
     
     /**
      * Permet de lancer la musique selection
@@ -160,6 +161,18 @@ public class GameLogic extends Application {
             Media wasted = new Media(Paths.get(sound).toUri().toString());
             mediaPlayerVictory = new MediaPlayer(wasted);
             mediaPlayerVictory.play();
+        }
+    }
+
+    /**
+     * Permet de lancer la musique de fin si plusieurs joueurs humains
+     */
+    public static void musicVictoryPlayers(){
+        if (System.getProperty("os.name").contains("Windows")) {
+            String sound = "src/main/resources/fr/benjaminbrehier/_6quiprend/snd/victoryplayers.mp3";
+            Media victoryPlayers = new Media(Paths.get(sound).toUri().toString());
+            mediaPlayerVictoryPlayers = new MediaPlayer(victoryPlayers);
+            mediaPlayerVictoryPlayers.play();
         }
     }
 }
