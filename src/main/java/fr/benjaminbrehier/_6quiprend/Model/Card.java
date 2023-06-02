@@ -17,6 +17,22 @@ public class Card {
     private Pane graphicCard;
     private Pane backCard;
 
+    public Card(int number) {
+        this.number = number;
+        if (number % 11 == 0) {
+            if (number == 55) {
+                this.bullHead = 7;
+            } else {
+                this.bullHead = 5;
+            }
+        } else if (number % 10 == 0) {
+            this.bullHead = 3;
+        } else if (number % 5 == 0) {
+            this.bullHead = 2;
+        } else {
+            this.bullHead = 1;
+        }
+    }
     public Card(int number, int bullHead) {
         this.number = number;
         this.bullHead = bullHead;

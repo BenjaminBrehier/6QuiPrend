@@ -56,12 +56,7 @@ public class Partie {
         VBox vbox = new VBox();
 
         Label titre = new Label("Le 6quiPrend!");
-        //Font HPFont = Font.loadFont("src/main/resources/fr/benjaminbrehier/_6quiprend/fonts/HPFont.ttf", 40);
-        //titre.setFont(HPFont);
         titre.setStyle("-fx-font-size: 60px; -fx-font-family: monospace; -fx-background-color: transparent; -fx-text-fill: " + "red" + "; -fx-font-weight: bold;");
-        //InputStream fontStream = new InputStream(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/font/mario_kart_f2.ttf").toURI().toString());
-        //Font fontTitre = Font.loadFont(fontStream, 20);
-        //titre.setFont(fontTitre);
         vbox.getChildren().add(titre);
 
         Image backgroundImage = new Image(new File("src/main/resources/fr/benjaminbrehier/_6quiprend/img/taureaux-transformed.jpeg").toURI().toString());
@@ -262,7 +257,7 @@ public class Partie {
      * @param nbPlayer
      * @param nbIA
      */
-    private void setup(String nbPlayer, String nbIA) {
+    public void setup(String nbPlayer, String nbIA) {
         nbRealPlayer = Integer.parseInt(nbPlayer);
         for (int i = 1; i <= 104; i++) {
             if (i % 11 == 0) {

@@ -86,7 +86,6 @@ public class Board {
                 System.out.println("Carte jouée : " + card);
                 GameLogic.partie.getPlayers().get(0).getHand().remove(card);
                 GameLogic.partie.getCartesJouees().put(GameLogic.partie.getPlayers().get(0), card);
-                GameLogic.partie.getPlayers().get(0).setHasChoose(true);
                 // card.getGraphicCard().setTranslateY(card.getGraphicCard().getTranslateY() + 10);
                 ((Rectangle) card.getGraphicCard().getChildren().get(0)).setStroke(Color.BLACK);
                 GameLogic.partie.jouer();
