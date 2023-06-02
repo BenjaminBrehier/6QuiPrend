@@ -34,9 +34,9 @@ import javafx.scene.shape.Rectangle;
 
 public class Partie {
     private ArrayList<Card> pioche;
-    private ArrayList<Character> players;
+    private ArrayList<Player> players;
     private Board board;
-    private HashMap<Character, Card> cartesJouees;
+    private HashMap<Player, Card> cartesJouees;
     private int nbRealPlayer;
 
     public Partie() {
@@ -328,7 +328,7 @@ public class Partie {
     public void jouer() {
         board.reloadPanel(false);
         if (cartesJouees.size() == nbRealPlayer) {
-            for (Character c : players) {
+            for (Player c : players) {
                 if (c instanceof IA) {
                     IA ia = (IA) c;
                     ia.play();
@@ -346,17 +346,17 @@ public class Partie {
             }
 
             // Trie des cartes dans la HashMap
-            List<Map.Entry<Character, Card>> list = new ArrayList<>(cartesJouees.entrySet());
+            List<Map.Entry<Player, Card>> list = new ArrayList<>(cartesJouees.entrySet());
             list.sort(Comparator.comparingInt(e -> e.getValue().getNumber()));
-            LinkedHashMap<Character, Card> cartesJoueesTriees = new LinkedHashMap<>();
-            for (Map.Entry<Character, Card> entry : list) {
+            LinkedHashMap<Player, Card> cartesJoueesTriees = new LinkedHashMap<>();
+            for (Map.Entry<Player, Card> entry : list) {
                 cartesJoueesTriees.put(entry.getKey(), entry.getValue());
             }
 
-            for (Map.Entry<Character, Card> testEntry : cartesJoueesTriees.entrySet()) {
+            for (Map.Entry<Player, Card> testEntry : cartesJoueesTriees.entrySet()) {
                 ArrayList<Card> ligne = null;
                 Card card = (Card) testEntry.getValue();
-                Character joueur = (Character) testEntry.getKey();
+                Player joueur = (Player) testEntry.getKey();
 
                 for (int j = 0; j < board.getLignes().size(); j++) {
                     Card lastCard = board.getLignes().get(j).get(board.getLignes().get(j).size() - 1);
@@ -474,11 +474,11 @@ public class Partie {
         return board;
     }
 
-    public HashMap<Character, Card> getCartesJouees() {
+    public HashMap<Player, Card> getCartesJouees() {
         return cartesJouees;
     }
 
-    public ArrayList<Character> getPlayers() {
+    public ArrayList<Player> getPlayers() {
         return players;
     }
 

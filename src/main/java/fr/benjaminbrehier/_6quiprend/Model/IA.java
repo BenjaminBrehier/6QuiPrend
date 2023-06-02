@@ -5,8 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import fr.benjaminbrehier._6quiprend.GameLogic;
 
-public class IA extends Character {
-
+public class IA extends Player {
     public IA(String name, ArrayList<Card> hand) {
         super(name, hand);
     }

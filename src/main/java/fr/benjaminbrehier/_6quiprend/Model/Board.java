@@ -522,7 +522,7 @@ public class Board {
      * @param gagnant
      * @param points
      */
-    public void finJeu(Character gagnant, int points) {
+    public void finJeu(Player gagnant, int points) {
         Rectangle rect = new Rectangle(0, 0, 1440, 855);
         rect.setFill(Color.BLACK);
         rect.setOpacity(0.5);
@@ -535,8 +535,8 @@ public class Board {
         text.setY(333 / 2 - text.getLayoutBounds().getHeight() / 2);
 
         // Déterminer la classement des joueurs et les afficher dans l'ordre avec leur score
-        HashMap<Character, Integer> listeJoueurScore = new HashMap<>();
-        for (Character character : GameLogic.partie.getPlayers()) {
+        HashMap<Player, Integer> listeJoueurScore = new HashMap<>();
+        for (Player character : GameLogic.partie.getPlayers()) {
             int score = 0;
             for (Card card : character.getPoints()) {
                 score += card.getBullHead();
@@ -544,10 +544,10 @@ public class Board {
             listeJoueurScore.put(character, score);
         }
 
-        List<Map.Entry<Character, Integer>> list = new ArrayList<>(listeJoueurScore.entrySet());
+        List<Map.Entry<Player, Integer>> list = new ArrayList<>(listeJoueurScore.entrySet());
         list.sort(Comparator.comparingInt(e -> e.getValue()));
-        LinkedHashMap<Character, Integer> classement = new LinkedHashMap<>();
-        for (Map.Entry<Character, Integer> entry : list) {
+        LinkedHashMap<Player, Integer> classement = new LinkedHashMap<>();
+        for (Map.Entry<Player, Integer> entry : list) {
             classement.put(entry.getKey(), entry.getValue());
         }
 
@@ -558,7 +558,7 @@ public class Board {
         graphicClassement.setPadding(new Insets(10, 0, 0, 10));
         
         int cpt = 0;
-        for (Map.Entry<Character, Integer> entry : classement.entrySet()) {
+        for (Map.Entry<Player, Integer> entry : classement.entrySet()) {
             Text position = new Text(cpt + 1 + ".");
             position.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
             Color color = Color.WHITE;
