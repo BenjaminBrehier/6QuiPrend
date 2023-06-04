@@ -656,7 +656,7 @@ public class Board {
             if (GameLogic.mediaPlayerWasted != null  && GameLogic.partie.getNbRealPlayer() == 1){
                 GameLogic.mediaPlayerWasted.stop();
             }
-            if (GameLogic.partie.getNbRealPlayer() > 1){
+            if (GameLogic.mediaPlayerVictoryPlayers != null && GameLogic.partie.getNbRealPlayer() > 1){
                 GameLogic.mediaPlayerVictoryPlayers.stop();
             }
             board.getChildren().remove(rect);
